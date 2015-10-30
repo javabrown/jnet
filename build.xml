@@ -1,0 +1,36 @@
+<project name="jnet" default="run" basedir=".">
+	  <property name="lib.dir" value="lib"/>
+	  <property name="files.dir" value="files"/>
+	
+	  <property name="build-output.main" value="com.jbrown.Main"/>
+	  <property name="build-output.jar" value="jnet.jar"/>
+	
+	  <path id="classpath">
+	        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+	  </path>
+ 
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile" depends="clean">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" debug="on" source="1.7" destdir="build/classes" classpathref="classpath"/>
+    </target>
+
+    <target name="jar" depends="compile">
+         <mkdir dir="build/jar"/>
+         <jar destfile="build/jar/${build-output.jar}" basedir="build/classes" includes="/**">  
+           <manifest>
+                <attribute name="Main-Class" value="${build-output.main}"/>
+              	<attribute name="Class-Path" value="${classpath}" />
+           </manifest>
+         </jar>
+    </target>
+	
+    <target name="run" depends="jar">
+        <java jar="build/jar/jnet.jar" fork="true" spawn="true"/>
+    </target>
+
+</project>

@@ -1,5 +1,6 @@
 package com.jbrown.jnet.core;
 
+import java.net.Socket;
 import java.util.Arrays;
 
 import com.jbrown.jnet.utils.KeysI;
@@ -8,11 +9,13 @@ import com.jbrown.jnet.utils.StringUtils;
 import static com.jbrown.jnet.utils.StringUtils.*;
 
 public class Request implements RequestI {
+  private Socket _socket;
   private String   _rowInput;
   private Command  _command;
   private String[] _parameters;
 
-  public Request(String rowInput) {
+  public Request(Socket socket, String rowInput) {
+    _socket = socket;
     _rowInput = rowInput;
     _command = populateCommand();
     _parameters = populateParameters();
@@ -32,10 +35,15 @@ public class Request implements RequestI {
   public String getRowCommand() {
     return _rowInput;
   }
-  
-  public String getRowInput() {
-    return _rowInput;
+ 
+  @Override
+  public Socket getSocket() {
+    return _socket;
   }
+  
+//  public String getRowInput() {
+//    return _rowInput;
+//  }
 
   private Command populateCommand() {
     try {
@@ -82,11 +90,5 @@ public class Request implements RequestI {
     }
 
     return cleanArray;
-  }
-
-  public static void main(String[] args) {
-    Request re = new Request("1 clear p1 p2    p3 ");
-    System.out.printf("\ncommand = %s", re.getCommand());
-    System.out.printf("\nparams = %s", Arrays.toString(re.getParameters()));
   }
 }
