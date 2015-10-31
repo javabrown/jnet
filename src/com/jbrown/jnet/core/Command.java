@@ -7,6 +7,8 @@ public enum Command {
    PING("ping", "Perform test I/O"),
    CALC("calc", "Evaluate mathematical expression\n\r\t  "+"Sample > calc 10 + 2 * 9"),
    HELP("help", "Return list of command"),
+   WGET("wget", "Perform HTTP GET operation\n\r\t  "+"Sample > wget http://www.javabrown.com"),
+   
    ;
    
    private String _name;

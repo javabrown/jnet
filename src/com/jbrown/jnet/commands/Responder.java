@@ -10,6 +10,7 @@ import com.jbrown.jnet.commands.action.HelpAction;
 import com.jbrown.jnet.commands.action.MathAction;
 import com.jbrown.jnet.commands.action.NoAction;
 import com.jbrown.jnet.commands.action.PingAction;
+import com.jbrown.jnet.commands.action.WGetAction;
 import com.jbrown.jnet.core.Command;
 import com.jbrown.jnet.core.Request;
 import com.jbrown.jnet.core.RequestI;
@@ -24,7 +25,7 @@ public class Responder {
     _commandActionMap.put(Command.PING, PingAction.class);
     _commandActionMap.put(Command.HELP, HelpAction.class);
     _commandActionMap.put(Command.CALC, MathAction.class);
-    
+    _commandActionMap.put(Command.WGET, WGetAction.class);
   }
 
   public String respond(Socket socket, String rowSocketInput) {

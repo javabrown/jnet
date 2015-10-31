@@ -8,6 +8,7 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.commands.Responder;
@@ -24,7 +25,7 @@ public class BrownServer implements Runnable {
   
   public BrownServer(int port) throws IOException {
     _socket = new ServerSocket(port, 50, 
-        InetAddress.getByName("192.168.8.130"));
+        InetAddress.getByName("192.168.1.5"));
     _port = port;
     _runningFlag = false;
     _responder = new Responder();
@@ -40,20 +41,23 @@ public class BrownServer implements Runnable {
         System.out.println(_connectionSocket.getLocalSocketAddress().toString());
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(
-            _connectionSocket.getInputStream()));
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-            _connectionSocket.getOutputStream()));
+            _connectionSocket.getInputStream(), KeysI.UTF_8));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(
+            _connectionSocket.getOutputStream(), KeysI.UTF_8));
 
         String command = "";
 
         while (!command.equalsIgnoreCase(KeysI.QUIT) && _runningFlag) {
-          writer.write(format("\n\r%s> ", KeysI.PROMPT_K));
-          writer.flush();
+          out.write(format("\n\r%s> ", KeysI.PROMPT_K));
+          out.flush();
           command = reader.readLine().trim();
+          
+          //out.write(format("=====\n\r%s> ====\n\r", command));
+          //out.flush();
+          
           String commandResult = _responder.respond(_connectionSocket, command);
 
-          writer.write("\n\r"+commandResult + "\n\r");
-          writer.flush();
+          sendResponse(out, commandResult);
         }
 
       } catch (Exception ex) {
@@ -70,6 +74,18 @@ public class BrownServer implements Runnable {
     }
   }
 
+  private void sendResponse(BufferedWriter out, String commandResult) throws IOException{
+//    out.write("HTTP/1.0 200 OK\r\n");
+//    out.write(format("Date: %s\r\n", new Date().toString()));
+//    out.write("Server: J/0.8.4\r\n");
+//    out.write("Content-Type: text/html\r\n");
+//    out.write("Content-Length: 59\r\n");
+//    out.write("Expires: Sat, 01 Jan 2000 00:59:59 GMT\r\n");
+//    out.write(format("Last-modified: %s\r\n", new Date().toString()));
+    out.write(format("\n\r%s\n\r", commandResult));
+    out.flush();
+  }
+  
   public boolean isRunning() {
     return _runningFlag;
   }
