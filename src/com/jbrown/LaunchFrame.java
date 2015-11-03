@@ -48,7 +48,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
   private JLabel _portLabel;
 
   private WinTray _winTray; //RK : For now lazy initialization is needed
-
+  private Launcher _server;
 
   public static void main(String[] args) {
     new LaunchFrame();
@@ -101,9 +101,23 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _hostField.setEditable(false);
     _portField.setEditable(false);
     _start.setEnabled(false);
+    
+    try {
+      _server = new Launcher(_hostField.getText(), 
+          Integer.parseInt(_portField.getText()));
+      _server.start();
+    } catch (NumberFormatException | IOException e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
   }
 
   public void stopServer(){
+    try {
+      _server.stop();
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+    
     _hostField.setEditable(true);
     _portField.setEditable(true);
     _start.setEnabled(true);
