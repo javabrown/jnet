@@ -9,19 +9,29 @@
 	        <fileset dir="${lib.dir}" includes="**/*.jar"/>
 	  </path>
  
+    <fileset id="jar-dependencies" dir="${lib.dir}" includes="*.jar" />
+    <fileset id="files-dependencies" dir="${files.dir}" includes="**/*.*" />
 
+    <pathconvert property="manifest.classpath" dirsep="/" pathsep=" "
+               refid="jar-dependencies">
+        <map from="${lib.dir}" to="lib" />
+    </pathconvert>
+    
     <target name="clean">
         <delete dir="build"/>
     </target>
 
     <target name="compile" depends="clean">
         <mkdir dir="build/classes"/>
+        <copydir src="files/resources" dest="build/classes"/>
         <javac srcdir="src" debug="on" source="1.7" destdir="build/classes" classpathref="classpath"/>
     </target>
 
     <target name="jar" depends="compile">
          <mkdir dir="build/jar"/>
          <jar destfile="build/jar/${build-output.jar}" basedir="build/classes" includes="/**">  
+           <zipgroupfileset dir="${lib.dir}" includes="*.jar"/>       
+           <zipgroupfileset dir="${files.dir}" includes="*.jar"/> 
            <manifest>
                 <attribute name="Main-Class" value="${build-output.main}"/>
               	<attribute name="Class-Path" value="${classpath}" />

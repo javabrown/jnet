@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 public class Main {
   public static void main(String[] args) {
     try {
-      new Launcher();
+      new LaunchFrame().launch();
     } catch (Exception e) {
       e.printStackTrace();
       JOptionPane.showMessageDialog(new JFrame(), e.getMessage());
