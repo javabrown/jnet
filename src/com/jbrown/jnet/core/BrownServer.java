@@ -17,15 +17,16 @@ import static java.lang.String.format;
 
 public class BrownServer implements Runnable {
   private ServerSocket _socket;
+  private String _host;
   private int _port;
   private Socket _connectionSocket;
   private Responder _responder;
   
   private static boolean _runningFlag;
   
-  public BrownServer(int port) throws IOException {
-    _socket = new ServerSocket(port, 50, 
-        InetAddress.getByName("192.168.1.5"));
+  public BrownServer(String host, int port) throws IOException {
+    _socket = new ServerSocket(port, 50, InetAddress.getByName(host));
+    _host = host;
     _port = port;
     _runningFlag = false;
     _responder = new Responder();
@@ -95,6 +96,13 @@ public class BrownServer implements Runnable {
   }
 
   public boolean stop() {
+    try {
+      _socket.close();
+      _connectionSocket.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
     _runningFlag = false;
     _socket = null;
     return _runningFlag;
