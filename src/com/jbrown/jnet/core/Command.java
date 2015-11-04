@@ -8,7 +8,9 @@ public enum Command {
    CALC("calc", "Evaluate mathematical expression\n\r\t  "+"Sample > calc 10 + 2 * 9"),
    HELP("help", "Return list of command"),
    WGET("wget", "Perform HTTP GET operation\n\r\t  "+"Sample > wget http://www.javabrown.com"),
-   
+   GET("get", "Retrieve cached {VALUE} from jNet for a given {KEY}\n\r\t  "+"Sample > get key-name"),
+   SET("set", "Store {KEY, VALUE} pair of data in jNet.\n\r\t  "+"Sample > set key-name key-value"),
+      
    ;
    
    private String _name;
