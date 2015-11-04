@@ -7,4 +7,6 @@ public interface RequestI {
 	String[] getParameters();
 	String getRowCommand();
 	Socket getSocket();
+  void setContext(SharedContextI context);
+  SharedContextI getContext();
 }

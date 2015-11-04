@@ -2,21 +2,16 @@ package com.jbrown.jnet.commands.action;
 
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 
-public class ClearAction extends AbstractAction<String>{
-  
-  public ClearAction(RequestI request) {
-    super(request);
-  }
-
+public class ClearAction implements ActionPerformerI<String>  {
   @Override
-  String perform() {
+  public String perform(RequestI request, ErrorI errors) {
     return "\u001B[2J";
   }
 
   @Override
-  boolean validate() {
+  public boolean validate(RequestI request, ErrorI errors) {
     return true;
   }
-
 }

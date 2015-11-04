@@ -1,20 +1,19 @@
 package com.jbrown.jnet.commands.action;
 
+import com.jbrown.jnet.commands.Responder;
+import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
+import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
 
-public class HelpAction extends AbstractAction<String> {
-
-  public HelpAction(RequestI request) {
-    super(request);
+public class HelpAction implements ActionPerformerI<String> {
+  @Override
+  public String perform(RequestI request, ErrorI errors) {
+    return request.getCommand().getCommandList();
   }
 
   @Override
-  String perform() {
-    return _request.getCommand().getCommandList();
-  }
-
-  @Override
-  boolean validate() {
+  public boolean validate(RequestI request, ErrorI errors) {
+    // TODO Auto-generated method stub
     return true;
   }
 }

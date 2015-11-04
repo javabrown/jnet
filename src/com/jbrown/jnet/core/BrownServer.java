@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.Map;
 
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.commands.Responder;
@@ -21,15 +22,16 @@ public class BrownServer implements Runnable {
   private int _port;
   private Socket _connectionSocket;
   private Responder _responder;
-  
+
+
   private static boolean _runningFlag;
-  
-  public BrownServer(String host, int port) throws IOException {
+
+  public BrownServer(String host, int port, Responder responder) throws IOException {
     _socket = new ServerSocket(port, 50, InetAddress.getByName(host));
     _host = host;
     _port = port;
     _runningFlag = false;
-    _responder = new Responder();
+    _responder = responder;
   }
 
   @Override
@@ -52,11 +54,12 @@ public class BrownServer implements Runnable {
           out.write(format("\n\r%s> ", KeysI.PROMPT_K));
           out.flush();
           command = reader.readLine().trim();
-          
+
           //out.write(format("=====\n\r%s> ====\n\r", command));
           //out.flush();
-          
-          String commandResult = _responder.respond(_connectionSocket, command);
+
+          String commandResult =
+              _responder.respond(new Request(_connectionSocket, command));
 
           sendResponse(out, commandResult);
         }
@@ -86,7 +89,7 @@ public class BrownServer implements Runnable {
     out.write(format("\n\r%s\n\r", commandResult));
     out.flush();
   }
-  
+
   public boolean isRunning() {
     return _runningFlag;
   }
@@ -102,7 +105,7 @@ public class BrownServer implements Runnable {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    
+
     _runningFlag = false;
     _socket = null;
     return _runningFlag;

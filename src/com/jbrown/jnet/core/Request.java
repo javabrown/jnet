@@ -13,12 +13,23 @@ public class Request implements RequestI {
   private String   _rowInput;
   private Command  _command;
   private String[] _parameters;
+  private SharedContextI _context;
 
   public Request(Socket socket, String rowInput) {
     _socket = socket;
     _rowInput = rowInput;
     _command = populateCommand();
     _parameters = populateParameters();
+  }
+
+  @Override
+  public SharedContextI getContext() {
+    return _context;
+  }
+
+  @Override
+  public void setContext(SharedContextI context) {
+    _context = context;
   }
 
   @Override
@@ -35,12 +46,12 @@ public class Request implements RequestI {
   public String getRowCommand() {
     return _rowInput;
   }
- 
+
   @Override
   public Socket getSocket() {
     return _socket;
   }
-  
+
 //  public String getRowInput() {
 //    return _rowInput;
 //  }

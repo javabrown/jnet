@@ -2,12 +2,15 @@ package com.jbrown;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
@@ -26,6 +29,8 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 
 import com.jbrown.jnet.ui.SpringUtilities;
@@ -48,7 +53,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
   private JLabel _portLabel;
 
   private WinTray _winTray; //RK : For now lazy initialization is needed
-  private Launcher _server;
+  private JnetContainer _server;
 
   public static void main(String[] args) {
     new LaunchFrame();
@@ -73,7 +78,8 @@ public class LaunchFrame extends JFrame implements ActionListener {
     Image image = null;
     try {
       image = ImageIO.read(in);
-    } catch (IOException e) {
+      image = image.getScaledInstance(28, 28,Image.SCALE_AREA_AVERAGING);
+    } catch (Exception e) {
       e.printStackTrace();
       JOptionPane.showMessageDialog(this, e.getMessage());
     }
@@ -101,23 +107,36 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _hostField.setEditable(false);
     _portField.setEditable(false);
     _start.setEnabled(false);
-    
+
     try {
-      _server = new Launcher(_hostField.getText(), 
+      _server = new JnetContainer(_hostField.getText(),
           Integer.parseInt(_portField.getText()));
-      _server.start();
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          _server.start();
+        }
+      });
+
     } catch (NumberFormatException | IOException e) {
-        JOptionPane.showMessageDialog(this, e.getMessage());
+        e.printStackTrace();
+        //JOptionPane.showMessageDialog(this, e.getMessage());
     }
   }
 
   public void stopServer(){
     try {
-      _server.stop();
+      SwingUtilities.invokeLater(new Runnable() {
+        @Override
+        public void run() {
+          _server.stop();
+        }
+      });
+
     } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, e.getMessage());
+        //JOptionPane.showMessageDialog(this, e.getMessage());
     }
-    
+
     _hostField.setEditable(true);
     _portField.setEditable(true);
     _start.setEnabled(true);
@@ -177,6 +196,13 @@ public class LaunchFrame extends JFrame implements ActionListener {
     super.setSize(285, 190);
     super.setResizable(false);
     //super.setVisible(true);
+
+//    try {
+//      UIManager.setLookAndFeel(
+//          UIManager.getSystemLookAndFeelClassName());
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
   }
 
   private void setIcon() {
@@ -210,7 +236,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
     Rectangle rect = defaultScreen.getDefaultConfiguration().getBounds();
     int x = (int) rect.getMinX();
     int y = (int) rect.getMaxY() - super.getHeight();
-    super.setLocation(x, y);
+    //super.setLocation(x, y);
+
+    Dimension scrSize = rect.getSize();
+    super.setLocation( (int) (scrSize.width - getWidth()) - 100, scrSize.height - getHeight());
+
   }
 
   @Override

@@ -3,7 +3,10 @@ package com.jbrown.jnet.commands;
 import java.lang.reflect.Constructor;
 import java.net.Socket;
 import java.util.EnumMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
+import com.jbrown.jnet.commands.action.AbstractAction;
 import com.jbrown.jnet.commands.action.ActionI;
 import com.jbrown.jnet.commands.action.ClearAction;
 import com.jbrown.jnet.commands.action.HelpAction;
@@ -11,44 +14,32 @@ import com.jbrown.jnet.commands.action.MathAction;
 import com.jbrown.jnet.commands.action.NoAction;
 import com.jbrown.jnet.commands.action.PingAction;
 import com.jbrown.jnet.commands.action.WGetAction;
+import com.jbrown.jnet.core.ActionPerformer;
 import com.jbrown.jnet.core.Command;
 import com.jbrown.jnet.core.Request;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.core.SharedContext;
+import com.jbrown.jnet.core.SharedContextI;
 
 public class Responder {
-  private EnumMap<Command, Class> _commandActionMap;
+  private ActionPerformer _actionPerformer;
+  private SharedContextI _sharedContext;
 
   public Responder() {
-    _commandActionMap = new EnumMap<Command, Class>(Command.class);
+//    _actionPerformerMap = new EnumMap<Command, Class>(Command.class);
+//
+//    _actionPerformerMap.put(Command.CLEAR, ClearAction.class);
+//    _actionPerformerMap.put(Command.PING, PingAction.class);
+//    _actionPerformerMap.put(Command.HELP, HelpAction.class);
+//    _actionPerformerMap.put(Command.CALC, MathAction.class);
+//    _actionPerformerMap.put(Command.WGET, WGetAction.class);
 
-    _commandActionMap.put(Command.CLEAR, ClearAction.class);
-    _commandActionMap.put(Command.PING, PingAction.class);
-    _commandActionMap.put(Command.HELP, HelpAction.class);
-    _commandActionMap.put(Command.CALC, MathAction.class);
-    _commandActionMap.put(Command.WGET, WGetAction.class);
+    _actionPerformer = new ActionPerformer();
+    _sharedContext = new SharedContext();
   }
 
-  public String respond(Socket socket, String rowSocketInput) {
-    RequestI request = new Request(socket, rowSocketInput);
-    ActionI<String> action = getAction(request);
-    return action.trigger();
-  }
-
-  private ActionI getAction(RequestI request) {
-    Class klass = _commandActionMap.get(request.getCommand());
-    ActionI action = new NoAction(request);
-
-    try {
-      Constructor<?> ctor = klass.getConstructor(RequestI.class);
-      Object object = ctor.newInstance(new Object[] { request });
-
-      if (object != null && object instanceof ActionI) {
-        action = (ActionI) object;
-      }
-    } catch (Exception ex) {
-      ex.printStackTrace();
-    }
-
-    return action;
+  public String respond(RequestI request) {
+    AbstractAction<String> abs = new AbstractAction(request, _sharedContext);
+    return abs.trigger();
   }
 }

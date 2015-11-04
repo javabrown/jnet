@@ -49,7 +49,7 @@ public class WinTray {
     }
   };
 
-  private java.awt.SystemTray _systemTray;
+  private SystemTray _systemTray;
   private TrayIcon _trayIcon;
   private PopupMenu _trayPopupMenu;
 

@@ -6,23 +6,21 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 
+import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
+import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
 
-public class WGetAction extends AbstractAction<String> {
-
-  public WGetAction(RequestI request) {
-    super(request);
-  }
+public class WGetAction implements ActionPerformerI<String> {
 
   @Override
-  String perform() {
-    String[] parameters = _request.getParameters();
+  public String perform(RequestI request, ErrorI errors) {
+    String[] parameters = request.getParameters();
     String response = callURL(parameters[0]);
     return response;
   }
 
   @Override
-  boolean validate() {
+  public boolean validate(RequestI request, ErrorI errors) {
     return true;
   }
 
@@ -46,9 +44,9 @@ public class WGetAction extends AbstractAction<String> {
 
     return result;
   }
-  
+
   public String callURL(String myURL) {
-     
+
     StringBuilder sb = new StringBuilder();
     URLConnection urlConn = null;
     InputStreamReader in = null;
@@ -72,8 +70,8 @@ public class WGetAction extends AbstractAction<String> {
     in.close();
     } catch (Exception e) {
       sb.append(e.getMessage());
-    } 
- 
+    }
+
     return sb.toString();
   }
 }

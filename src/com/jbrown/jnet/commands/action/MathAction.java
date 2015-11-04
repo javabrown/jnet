@@ -3,23 +3,22 @@ package com.jbrown.jnet.commands.action;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 
+import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
+import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
 
-public class MathAction extends AbstractAction<String> {
-
-  public MathAction(RequestI request) {
-    super(request);
-  }
+public class MathAction implements ActionPerformerI<String> {
 
   @Override
-  String perform() {
-    String[] parameters = _request.getParameters();
+  public String perform(RequestI request, ErrorI errors) {
+    String[] parameters = request.getParameters();
     String response = eval(parameters);
+
     return response;
   }
 
   @Override
-  boolean validate() {
+  public boolean validate(RequestI request, ErrorI errors) {
     return true;
   }
 
@@ -29,7 +28,7 @@ public class MathAction extends AbstractAction<String> {
   public String eval(String[] parameters) {
 
     String result = "Invalid Expression";
-    
+
     try {
       String mathExpression = "";
       for (String param : parameters) {
