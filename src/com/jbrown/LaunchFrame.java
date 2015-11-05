@@ -178,8 +178,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
     _start.setActionCommand(COMMAND_START_K);
     _stop.setActionCommand(COMMAND_STOP_K);
+    _exit.setActionCommand(COMMAND_EXIT_K);
+    
     _start.addActionListener(this);
     _stop.addActionListener(this);
+    _exit.addActionListener(this);
 
     return jp;
   }
@@ -260,12 +263,6 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
     //_statusLabel.setText(getStatus());
   }
-
-//  private String getStatus() {
-//    // return _server.isRunning() ? "Running" : "Stopped";
-//    return "";
-//  }
-
 }
 
 

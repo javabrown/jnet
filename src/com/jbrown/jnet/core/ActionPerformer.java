@@ -1,9 +1,7 @@
 package com.jbrown.jnet.core;
 
-import java.lang.reflect.Constructor;
 import java.util.EnumMap;
 
-import com.jbrown.jnet.commands.action.ActionI;
 import com.jbrown.jnet.commands.action.ClearAction;
 import com.jbrown.jnet.commands.action.GetAction;
 import com.jbrown.jnet.commands.action.HelpAction;
@@ -37,23 +35,4 @@ public class ActionPerformer {
 
     return klass;
   }
-
-//  public ActionI getActionPerformer(RequestI request,
-//      SharedContextI sharedContext) {
-//    Class klass = _actionPerformerMap.get(request.getCommand());
-//    ActionI action = new NoAction();
-//
-//    try {
-//      Constructor<?> ctor = klass.getConstructor(RequestI.class);
-//      Object object = ctor.newInstance(new Object[] { request, sharedContext });
-//
-//      if (object != null && object instanceof ActionI) {
-//        action = (ActionI) object;
-//      }
-//    } catch (Exception ex) {
-//      ex.printStackTrace();
-//    }
-//
-//    return action;
-//  }
 }

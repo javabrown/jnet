@@ -51,11 +51,7 @@ public class Request implements RequestI {
   public Socket getSocket() {
     return _socket;
   }
-
-//  public String getRowInput() {
-//    return _rowInput;
-//  }
-
+  
   private Command populateCommand() {
     try {
       String[] rowInput = beautifyRowInput();
