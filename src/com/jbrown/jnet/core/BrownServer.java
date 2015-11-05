@@ -10,9 +10,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.commands.Responder;
@@ -24,9 +28,11 @@ public class BrownServer implements Runnable {
   private String _host;
   private int _port;
   private Responder _responder;
+  
   private ThreadPoolExecutor _threadExecutor;
-
-
+  private Map<String, ClientThread> _clientThreadMap; 
+  private int _clientThreadIndex;
+  
   private static boolean _runningFlag;
 
   public BrownServer(String host, int port, Responder responder) throws IOException {
@@ -35,7 +41,10 @@ public class BrownServer implements Runnable {
     _port = port;
     _runningFlag = false;
     _responder = responder;
-    _threadExecutor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+    
+    _threadExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+    _clientThreadMap = new HashMap<String, ClientThread>();
+    _clientThreadIndex = 0;
   }
 
   @Override
@@ -47,7 +56,13 @@ public class BrownServer implements Runnable {
         try {
           Socket clientSocket = _serverSocket.accept();
           System.out.println(clientSocket.getLocalSocketAddress().toString());
-          _threadExecutor.execute(new ServerThread(clientSocket, _responder));
+          
+          String clientThreadId = format("client-thread-%s", _clientThreadIndex++);
+          ClientThread clientThread = new ClientThread(clientThreadId,
+              clientSocket, _responder);
+          
+          _clientThreadMap.put(clientThreadId, clientThread);
+          _threadExecutor.execute(clientThread);
         }
         catch (Exception ex) {
           ex.printStackTrace();
@@ -63,18 +78,6 @@ public class BrownServer implements Runnable {
     }
   }
 
-//  private void sendResponse(BufferedWriter out, String commandResult) throws IOException{
-////    out.write("HTTP/1.0 200 OK\r\n");
-////    out.write(format("Date: %s\r\n", new Date().toString()));
-////    out.write("Server: J/0.8.4\r\n");
-////    out.write("Content-Type: text/html\r\n");
-////    out.write("Content-Length: 59\r\n");
-////    out.write("Expires: Sat, 01 Jan 2000 00:59:59 GMT\r\n");
-////    out.write(format("Last-modified: %s\r\n", new Date().toString()));
-//    out.write(format("\n\r%s\n\r", commandResult));
-//    out.flush();
-//  }
-
   public boolean isRunning() {
     return _runningFlag;
   }
@@ -86,9 +89,18 @@ public class BrownServer implements Runnable {
   public boolean stop() {
     try {
       _runningFlag = false;
-
+      
+      for(ClientThread client : _clientThreadMap.values()){
+        client.stop();
+        client = null;
+        System.out.printf("Client thread %s stopped.", 
+            client.getThreadId());
+      }
+      
       _serverSocket.close();
       _threadExecutor.shutdown();
+      
+      JOptionPane.showMessageDialog(new JFrame(), "Server Stopped");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -97,16 +109,30 @@ public class BrownServer implements Runnable {
   }
 }
 
-class ServerThread implements Runnable {
+class ClientThread implements Runnable {
+  private String _clientThreadId;
   private Socket _csocket;
   private Responder _responder;
-
-  public ServerThread(Socket csocket, Responder responder) {
+  
+  private static boolean _isRunning; 
+  
+  public ClientThread(String clientThreadId, Socket csocket, Responder responder) {
+     _clientThreadId = clientThreadId;
      _csocket = csocket;
      _responder = responder;
+     _isRunning = false;
   }
 
+  public String getThreadId(){
+    return _clientThreadId;
+  }
+  
+  public void stop(){
+    _isRunning = false;
+  }
+  
   public void run() {
+    _isRunning = true;
     PrintStream pstream = null;
     BufferedReader reader = null;
 
@@ -117,7 +143,7 @@ class ServerThread implements Runnable {
 
        String command = "";
 
-       while (!command.equalsIgnoreCase(KeysI.QUIT)) {
+       while (!command.equalsIgnoreCase(KeysI.QUIT) || _isRunning) {
          pstream.printf("\n\r%s> ", KeysI.PROMPT_K);
          pstream.flush();
          command = reader.readLine().trim();
