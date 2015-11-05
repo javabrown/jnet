@@ -1,11 +1,10 @@
-package com.jbrown;
+package com.jbrown.jnet.core;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.jbrown.jnet.commands.Responder;
-import com.jbrown.jnet.core.BrownServer;
 
 
 public class JnetContainer {

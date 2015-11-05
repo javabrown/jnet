@@ -33,6 +33,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.EtchedBorder;
 
+import com.jbrown.jnet.core.JnetContainer;
 import com.jbrown.jnet.ui.SpringUtilities;
 import com.jbrown.jnet.ui.WinTray;
 import com.jbrown.jnet.utils.KeysI;
@@ -120,7 +121,6 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
     } catch (NumberFormatException | IOException e) {
         e.printStackTrace();
-        //JOptionPane.showMessageDialog(this, e.getMessage());
     }
   }
 
@@ -134,7 +134,6 @@ public class LaunchFrame extends JFrame implements ActionListener {
       });
 
     } catch (NumberFormatException e) {
-        //JOptionPane.showMessageDialog(this, e.getMessage());
     }
 
     _hostField.setEditable(true);
