@@ -1,45 +1,73 @@
 package com.jbrown.jnet.commands;
 
-import java.lang.reflect.Constructor;
-import java.net.Socket;
-import java.util.EnumMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import com.jbrown.jnet.commands.action.AbstractAction;
-import com.jbrown.jnet.commands.action.ActionI;
-import com.jbrown.jnet.commands.action.ClearAction;
-import com.jbrown.jnet.commands.action.HelpAction;
-import com.jbrown.jnet.commands.action.MathAction;
-import com.jbrown.jnet.commands.action.NoAction;
-import com.jbrown.jnet.commands.action.PingAction;
-import com.jbrown.jnet.commands.action.WGetAction;
 import com.jbrown.jnet.core.ActionPerformer;
-import com.jbrown.jnet.core.Command;
-import com.jbrown.jnet.core.Request;
 import com.jbrown.jnet.core.RequestI;
 import com.jbrown.jnet.core.SharedContext;
 import com.jbrown.jnet.core.SharedContextI;
+import com.jbrown.jnet.core.SocketPool;
 
 public class Responder {
   private ActionPerformer _actionPerformer;
   private SharedContextI _sharedContext;
+  private SocketPool _socPool;
 
   public Responder() {
-//    _actionPerformerMap = new EnumMap<Command, Class>(Command.class);
-//
-//    _actionPerformerMap.put(Command.CLEAR, ClearAction.class);
-//    _actionPerformerMap.put(Command.PING, PingAction.class);
-//    _actionPerformerMap.put(Command.HELP, HelpAction.class);
-//    _actionPerformerMap.put(Command.CALC, MathAction.class);
-//    _actionPerformerMap.put(Command.WGET, WGetAction.class);
-
     _actionPerformer = new ActionPerformer();
     _sharedContext = new SharedContext();
+     initializeSocPool();
+  }
+
+  public void initializeSocPool(){
+    _socPool = new SocketPool();
   }
 
   public String respond(RequestI request) {
     AbstractAction<String> abs = new AbstractAction(request, _sharedContext);
     return abs.trigger();
   }
+
+  public boolean isConnectionAvailable(){
+    return _socPool.isConnectionAvailable();
+  }
+
+  public SocketPool getSocketPool(){
+    return _socPool;
+  }
 }
+
+//class SocketPool {
+//  private static int MAX_CONNECTION = 10;
+//
+//  private Map<String, WorkerThread> _workerThreadMap;
+//  private ThreadPoolExecutor  _threadExecutor;
+//  private int _clientThreadIndex;
+//
+//  public SocketPool(){
+//    _threadExecutor =
+//        (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_CONNECTION);
+//    _clientThreadIndex = 0;
+//  }
+//
+//  public boolean isConnectionAvailable(){
+//    return _workerThreadMap.size() < MAX_CONNECTION;
+//  }
+//
+//  public boolean registerClient(WorkerThread clientThread){
+//    String clientThreadId = format("client-thread-%s", _clientThreadIndex++);
+//
+//    if(_workerThreadMap.size() < MAX_CONNECTION){
+//      _workerThreadMap.put(clientThreadId, clientThread);
+//      _threadExecutor.execute(clientThread);
+//      return true;
+//    }
+//
+//    System.out.printf("Rejected %s", clientThreadId);
+//
+//    return false;
+//  }
+//
+//  public void unregisterClient(String clientThreadId){
+//    _workerThreadMap.remove(clientThreadId);
+//  }
+//}
