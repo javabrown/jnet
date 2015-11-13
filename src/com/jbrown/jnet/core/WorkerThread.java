@@ -49,7 +49,7 @@ public class WorkerThread implements Runnable {
 
        String command = "";
 
-       while (!command.equalsIgnoreCase(KeysI.QUIT) || _isRunning) {
+       while (!command.equalsIgnoreCase(KeysI.QUIT) && _isRunning) {
          _writer.printf("\n\r%s> ", KeysI.PROMPT_K);
          _writer.flush();
          command = _reader.readLine().trim();
