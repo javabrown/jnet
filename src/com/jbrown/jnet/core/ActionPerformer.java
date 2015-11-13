@@ -10,6 +10,7 @@ import com.jbrown.jnet.commands.action.NoAction;
 import com.jbrown.jnet.commands.action.PingAction;
 import com.jbrown.jnet.commands.action.SetAction;
 import com.jbrown.jnet.commands.action.WGetAction;
+import com.jbrown.jnet.commands.action.WhoAction;
 
 public class ActionPerformer {
   private EnumMap<Command, Class> _actionPerformerMap;
@@ -24,6 +25,7 @@ public class ActionPerformer {
     _actionPerformerMap.put(Command.WGET, WGetAction.class);
     _actionPerformerMap.put(Command.GET,  GetAction.class);
     _actionPerformerMap.put(Command.SET,  SetAction.class);
+    _actionPerformerMap.put(Command.WHO,  WhoAction.class);
   }
 
   public Class getActionClass(RequestI request) {
