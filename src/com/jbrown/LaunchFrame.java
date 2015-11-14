@@ -37,6 +37,7 @@ import com.jbrown.jnet.core.JnetContainer;
 import com.jbrown.jnet.ui.SpringUtilities;
 import com.jbrown.jnet.ui.WinTray;
 import com.jbrown.jnet.utils.KeysI;
+import com.jbrown.jnet.utils.Utils;
 
 import static com.jbrown.jnet.utils.KeysI.*;
 
@@ -66,7 +67,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _exit = new JButton(COMMAND_EXIT_K);
 
     _hostLabel = new JLabel("HOST");
-    _hostField = new JTextField("localhost", 10);
+    _hostField = new JTextField(Utils.getIP(), 10);
 
     _portLabel = new JLabel("PORT");
     _portField = new JTextField("22", 4);
@@ -179,7 +180,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _start.setActionCommand(COMMAND_START_K);
     _stop.setActionCommand(COMMAND_STOP_K);
     _exit.setActionCommand(COMMAND_EXIT_K);
-    
+
     _start.addActionListener(this);
     _stop.addActionListener(this);
     _exit.addActionListener(this);
