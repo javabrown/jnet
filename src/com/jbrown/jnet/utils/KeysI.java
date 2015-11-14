@@ -9,4 +9,6 @@ public interface KeysI {
 	String COMMAND_STOP_K = "Stop";
 	String COMMAND_START_K = "Start";
 	String COMMAND_EXIT_K = "Exit";
+
+	String LOCAL_HOST = "localhost";
 }

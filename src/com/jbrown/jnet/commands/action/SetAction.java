@@ -4,6 +4,7 @@ import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
 import com.jbrown.jnet.utils.StringUtils;
+import static java.lang.String.format;
 
 public class SetAction  implements ActionPerformerI<String> {
 
@@ -15,7 +16,7 @@ public class SetAction  implements ActionPerformerI<String> {
     //    request.getSocket().getInetAddress(), params[0]);
     String key = String.format("%s", params[0]);
 
-    String value = joinValue(params);
+    String value = getCacheValue(request);
 
     request.getContext().putCache(key, value);
     return "saved!";
@@ -32,7 +33,7 @@ public class SetAction  implements ActionPerformerI<String> {
     try{
       String key = String.format("%s.%s",
         request.getSocket().getInetAddress(), params[0].trim());
-      String value = joinValue(params);
+      String value = getCacheValue(request);
 
       if(StringUtils.isEmpty(key)){
         errors.addErrors("cache {key} can not be empty or null");
@@ -53,14 +54,27 @@ public class SetAction  implements ActionPerformerI<String> {
     return true;
   }
 
-  private String joinValue(String[] params){
-    StringBuilder val = new StringBuilder();
+//  private String joinValue(String[] params){
+//    StringBuilder val = new StringBuilder();
+//
+//    for(int i=1; i < params.length; i++){
+//      val.append(params[i]);
+//    }
+//
+//    return val.toString();
+//  }
 
-    for(int i=1; i < params.length; i++){
-      val.append(params[i]);
-    }
 
-    return val.toString();
+  public String getCacheValue(RequestI request){
+    String line = request.getRowCommand().trim();
+    String[] arr = line.split(" ");
+
+    String command = arr[0];
+    String key = arr[1];
+
+    String value = line.replaceAll( format(".*\\b%s\\b", command), "" );
+           value = line.replaceAll( format(".*\\b%s\\b", key), "" ).trim();
+
+    return value;
   }
-
 }

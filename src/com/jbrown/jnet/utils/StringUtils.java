@@ -154,14 +154,19 @@ public class StringUtils {
 
   public static String stringify(String[] array) {
     String response = "";
-    
+
     if (!isEmpty(array)) {
       for (String s : array) {
         response = response + String.format("\n\r%s", s);
       }
     }
-    
+
     return response;
+  }
+
+  public static String removeBackspacedChar(String str){
+    str = str.replaceAll("^\b+|(?:([^\b])(?=\\1*+(\\2?+\b)))+\\2", "");
+    return str;
   }
 
   public static void main(String[] args) {

@@ -2,6 +2,7 @@ package com.jbrown.jnet.core;
 
 import java.util.EnumMap;
 
+import com.jbrown.jnet.commands.action.AboutAction;
 import com.jbrown.jnet.commands.action.ClearAction;
 import com.jbrown.jnet.commands.action.GetAction;
 import com.jbrown.jnet.commands.action.HelpAction;
@@ -19,13 +20,14 @@ public class ActionPerformer {
     _actionPerformerMap = new EnumMap<Command, Class>(Command.class);
 
     _actionPerformerMap.put(Command.CLEAR, ClearAction.class);
-    _actionPerformerMap.put(Command.PING, PingAction.class);
-    _actionPerformerMap.put(Command.HELP, HelpAction.class);
-    _actionPerformerMap.put(Command.CALC, MathAction.class);
-    _actionPerformerMap.put(Command.WGET, WGetAction.class);
-    _actionPerformerMap.put(Command.GET,  GetAction.class);
-    _actionPerformerMap.put(Command.SET,  SetAction.class);
-    _actionPerformerMap.put(Command.WHO,  WhoAction.class);
+    _actionPerformerMap.put(Command.PING,  PingAction.class);
+    _actionPerformerMap.put(Command.HELP,  HelpAction.class);
+    _actionPerformerMap.put(Command.CALC,  MathAction.class);
+    _actionPerformerMap.put(Command.WGET,  WGetAction.class);
+    _actionPerformerMap.put(Command.GET,   GetAction.class);
+    _actionPerformerMap.put(Command.SET,   SetAction.class);
+    _actionPerformerMap.put(Command.WHO,   WhoAction.class);
+    _actionPerformerMap.put(Command.ABOUT, AboutAction.class);
   }
 
   public Class getActionClass(RequestI request) {

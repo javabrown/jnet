@@ -41,7 +41,6 @@ public class WorkerThread implements Runnable {
   public void run() {
     _isRunning = true;
 
-
     try {
        _writer = new PrintStream(_csocket.getOutputStream());
        _reader = new BufferedReader(
@@ -52,7 +51,8 @@ public class WorkerThread implements Runnable {
        while (!command.equalsIgnoreCase(KeysI.QUIT) && _isRunning) {
          _writer.printf("\n\r%s> ", KeysI.PROMPT_K);
          _writer.flush();
-         command = _reader.readLine().trim();
+         String wireData = _reader.readLine();
+         command = new WireData(wireData).getCommand();
 
          String commandResult =
              _responder.respond(new Request(_csocket, command));

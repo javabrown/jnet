@@ -11,16 +11,26 @@ public enum Command {
    GET("get", "Retrieve cached {VALUE} from jNet for a given {KEY}\n\r\t  "+"Sample > get key-name"),
    SET("set", "Store {KEY, VALUE} pair of data in jNet.\n\r\t  "+"Sample > set key-name key-value"),
    WHO("who", "Returns ip-address of the remote client"),
+   QUIT("quit", "Quits JNET terminal."),
+   ABOUT("about", "\n\rJNET 1.0\n\rDesigned & Developed by Raja Khan (getrk@yahoo.com)", false)
 
    ;
 
 
    private String _name;
    private String _desc;
+   private boolean _displayable;
 
    Command(String name, String desc) {
      _name = name;
      _desc = desc;
+     _displayable = true;
+   }
+
+   Command(String name, String desc, boolean displayable) {
+     _name = name;
+     _desc = desc;
+     _displayable = displayable;
    }
 
    public String getName() {
@@ -29,6 +39,10 @@ public enum Command {
 
    public String getDesc() {
      return _desc;
+   }
+
+   public boolean isDisplayable(){
+     return _displayable;
    }
 
    public static Command find(String commandName) {
@@ -51,6 +65,8 @@ public enum Command {
              KeysI.PROMPT_K.toUpperCase());
 
      for (Command cmd : Command.values()) {
+       if(!cmd.isDisplayable()) continue;
+
        result = String.format("%s\n\r%s\t: %s\n",
            result, cmd.getName(), cmd.getDesc());
      }
