@@ -3,6 +3,7 @@ package com.jbrown.jnet.core;
 import java.net.Socket;
 import java.util.Arrays;
 
+import com.jbrown.jnet.utils.JsonMap;
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.StringUtils;
 
@@ -14,12 +15,14 @@ public class Request implements RequestI {
   private Command  _command;
   private String[] _parameters;
   private SharedContextI _context;
+  private final JsonMap _jsonMap;
 
   public Request(Socket socket, String rowInput) {
     _socket = socket;
     _rowInput = rowInput;
     _command = populateCommand();
     _parameters = populateParameters();
+    _jsonMap = new JsonMap();
   }
 
   @Override
@@ -97,5 +100,10 @@ public class Request implements RequestI {
     }
 
     return cleanArray;
+  }
+
+  @Override
+  public JsonMap getJsonMap() {
+    return _jsonMap;
   }
 }
