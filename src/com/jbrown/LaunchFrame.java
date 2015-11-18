@@ -10,9 +10,12 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Rectangle;
+import java.awt.SystemTray;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,9 +34,11 @@ import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 import com.jbrown.jnet.core.JnetContainer;
+import com.jbrown.jnet.ui.MoveMouseListener;
 import com.jbrown.jnet.ui.SpringUtilities;
 import com.jbrown.jnet.ui.WinTray;
 import com.jbrown.jnet.utils.KeysI;
@@ -43,6 +48,7 @@ import static com.jbrown.jnet.utils.KeysI.*;
 
 public class LaunchFrame extends JFrame implements ActionListener {
   private JButton _start;
+  private JButton _link;
   private JButton _stop;
   private JButton _exit;
 
@@ -62,7 +68,8 @@ public class LaunchFrame extends JFrame implements ActionListener {
   }
 
   public LaunchFrame() {
-    _start = new JButton(COMMAND_START_K);
+    _start = new JButton(COMMAND_HOST_K);
+    _link = new JButton(COMMAND_LINK_K);
     _stop = new JButton(COMMAND_STOP_K);
     _exit = new JButton(COMMAND_EXIT_K);
 
@@ -105,10 +112,14 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _winTray.launchTray();
   }
 
+  private void setEditableHost(boolean editable){
+    _hostField.setEditable(editable);
+    _portField.setEditable(editable);
+    _start.setEnabled(editable);
+  }
+
   public void startServer(){
-    _hostField.setEditable(false);
-    _portField.setEditable(false);
-    _start.setEnabled(false);
+    setEditableHost(false);
 
     try {
       _server = new JnetContainer(_hostField.getText(),
@@ -122,6 +133,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
     } catch (NumberFormatException | IOException e) {
         e.printStackTrace();
+        JOptionPane.showMessageDialog(this, e.getMessage());
+
+        if(_server == null || !_server.isRunning()){
+          setEditableHost(true);
+        }
     }
   }
 
@@ -163,6 +179,8 @@ public class LaunchFrame extends JFrame implements ActionListener {
     btnJp.setLayout(new FlowLayout(FlowLayout.CENTER));
     btnJp.add(_start);
     btnJp.add(new JSeparator(JSeparator.VERTICAL));
+    btnJp.add(_link);
+    btnJp.add(new JSeparator(JSeparator.VERTICAL));
     btnJp.add(_stop);
     btnJp.add(new JSeparator(JSeparator.VERTICAL));
     btnJp.add(_exit);
@@ -177,14 +195,6 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
     setUIFont();
 
-    _start.setActionCommand(COMMAND_START_K);
-    _stop.setActionCommand(COMMAND_STOP_K);
-    _exit.setActionCommand(COMMAND_EXIT_K);
-
-    _start.addActionListener(this);
-    _stop.addActionListener(this);
-    _exit.addActionListener(this);
-
     return jp;
   }
 
@@ -196,8 +206,10 @@ public class LaunchFrame extends JFrame implements ActionListener {
     this.setLocation();
     super.setTitle(PROMPT_K);
     super.setDefaultCloseOperation(HIDE_ON_CLOSE);
-    super.setSize(285, 190);
+    super.setSize(300, 190);
     super.setResizable(false);
+    super.setAlwaysOnTop(true);
+
     //super.setVisible(true);
 
 //    try {
@@ -206,6 +218,37 @@ public class LaunchFrame extends JFrame implements ActionListener {
 //    } catch (Exception e) {
 //      e.printStackTrace();
 //    }
+    initEventListeners();
+  }
+
+  private void initEventListeners(){
+    MoveMouseListener mml = new MoveMouseListener(this.getRootPane());
+    this.addMouseListener(mml);
+    this.addMouseMotionListener(mml);
+
+    if(SystemTray.isSupported()){
+      this.setUndecorated(true);
+
+      this.addWindowListener(new WindowAdapter() {
+        public void windowDeactivated(WindowEvent e) {
+          e.getWindow().setVisible(false);
+        }
+      });
+
+      ((JPanel)this.getContentPane()).setBorder(
+          new BevelBorder(BevelBorder.LOWERED));
+      this.getRootPane().setBorder(new BevelBorder(EtchedBorder.RAISED));
+    }
+
+    _start.setActionCommand(COMMAND_HOST_K);
+    _start.setActionCommand(COMMAND_LINK_K);
+    _stop.setActionCommand(COMMAND_STOP_K);
+    _exit.setActionCommand(COMMAND_EXIT_K);
+
+    _start.addActionListener(this);
+    _link.addActionListener(this);
+    _stop.addActionListener(this);
+    _exit.addActionListener(this);
   }
 
   private void setIcon() {
@@ -248,9 +291,14 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_START_K)) {
+    if (e.getActionCommand().equalsIgnoreCase(COMMAND_HOST_K)) {
        _winTray.setActivityStatus(WinTray.Status.RUNNING);
        this.startServer();
+    }
+
+    if (e.getActionCommand().equalsIgnoreCase(COMMAND_LINK_K)) {
+      _winTray.setActivityStatus(WinTray.Status.LINKED);
+      this.startServer();
     }
 
     if (e.getActionCommand().equalsIgnoreCase(COMMAND_STOP_K)) {

@@ -7,7 +7,8 @@ public interface KeysI {
 	String QUIT = "quit";
 
 	String COMMAND_STOP_K = "Stop";
-	String COMMAND_START_K = "Start";
+	String COMMAND_HOST_K = "Host";
+  String COMMAND_LINK_K = "Link";
 	String COMMAND_EXIT_K = "Exit";
 
 	String LOCAL_HOST = "localhost";

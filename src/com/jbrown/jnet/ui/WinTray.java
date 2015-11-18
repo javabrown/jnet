@@ -1,7 +1,7 @@
 package com.jbrown.jnet.ui;
 
 import static com.jbrown.jnet.utils.KeysI.COMMAND_EXIT_K;
-import static com.jbrown.jnet.utils.KeysI.COMMAND_START_K;
+import static com.jbrown.jnet.utils.KeysI.COMMAND_HOST_K;
 import static com.jbrown.jnet.utils.KeysI.COMMAND_STOP_K;
 
 import java.awt.AWTException;
@@ -27,7 +27,8 @@ import com.jbrown.Main;
 public class WinTray {
 
   public enum Status {
-    RUNNING("Running", "/icons/brown-logo.png"),
+    RUNNING("Running in host mode", "/icons/brown-logo.png"),
+    LINKED("Running in linked mode", "/icons/brown-logo.png"),
     NOT_RUNNING("Not Running", "/icons/brown-logo.png");
 
     String _text;
@@ -75,9 +76,13 @@ public class WinTray {
 
     _trayLabel = new Label("jNet");
 
-    _startMenu = new MenuItem(COMMAND_START_K, new MenuShortcut('S'));
+    _startMenu = new MenuItem(COMMAND_HOST_K, new MenuShortcut('S'));
     _stopMenu = new MenuItem(COMMAND_STOP_K, new MenuShortcut('o'));
     _exitMenu = new MenuItem(COMMAND_EXIT_K, new MenuShortcut('E'));
+  }
+
+  public boolean isSupported(){
+    return SystemTray.isSupported();
   }
 
   public void launchTray() {
@@ -115,7 +120,7 @@ public class WinTray {
     _trayPopupMenu.addSeparator();
 
     _trayPopupMenu.add(_startMenu);
-    _startMenu.setActionCommand(COMMAND_START_K);
+    _startMenu.setActionCommand(COMMAND_HOST_K);
     _startMenu.addActionListener(_listener);
 
     _trayPopupMenu.add(_stopMenu);
