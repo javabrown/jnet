@@ -42,7 +42,7 @@ public class WorkerThread implements Runnable {
     _isRunning = true;
 
     try {
-       _writer = new PrintStream(_csocket.getOutputStream());
+       _writer = new PrintStream(_csocket.getOutputStream(), true);
        _reader = new BufferedReader(
            new InputStreamReader( _csocket.getInputStream(), KeysI.UTF_8));
 

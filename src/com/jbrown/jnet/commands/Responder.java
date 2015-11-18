@@ -1,5 +1,7 @@
 package com.jbrown.jnet.commands;
 
+import java.text.ParseException;
+
 import com.jbrown.jnet.commands.action.AbstractAction;
 import com.jbrown.jnet.core.ActionPerformer;
 import com.jbrown.jnet.core.RequestI;
@@ -24,7 +26,15 @@ public class Responder {
 
   public String respond(RequestI request) {
     AbstractAction<String> abs = new AbstractAction(request, _sharedContext);
-    return abs.trigger();
+    String result = abs.trigger();
+    request.getJsonMap().put("response", result);
+    try {
+      return request.getJsonMap().toJson();
+    } catch (ParseException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+    return result;
   }
 
   public boolean isConnectionAvailable(){

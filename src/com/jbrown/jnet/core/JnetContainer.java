@@ -33,5 +33,9 @@ public class JnetContainer {
 
     return _server.stop();
   }
+
+  public boolean isRunning(){
+    return _server.isRunning();
+  }
 }
 
