@@ -1,4 +1,4 @@
-package com.jbrown;
+package com.jbrown.jnet;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -206,7 +206,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     this.setLocation();
     super.setTitle(PROMPT_K);
     super.setDefaultCloseOperation(HIDE_ON_CLOSE);
-    super.setSize(300, 190);
+    super.setSize(305, 190);
     super.setResizable(false);
     super.setAlwaysOnTop(true);
 
@@ -227,7 +227,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     this.addMouseMotionListener(mml);
 
     if(SystemTray.isSupported()){
-      this.setUndecorated(true);
+      //this.setUndecorated(true);
 
       this.addWindowListener(new WindowAdapter() {
         public void windowDeactivated(WindowEvent e) {

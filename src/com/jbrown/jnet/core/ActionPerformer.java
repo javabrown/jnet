@@ -4,6 +4,7 @@ import java.util.EnumMap;
 
 import com.jbrown.jnet.commands.action.AboutAction;
 import com.jbrown.jnet.commands.action.ClearAction;
+import com.jbrown.jnet.commands.action.ClipAction;
 import com.jbrown.jnet.commands.action.GetAction;
 import com.jbrown.jnet.commands.action.HelpAction;
 import com.jbrown.jnet.commands.action.MathAction;
@@ -28,6 +29,7 @@ public class ActionPerformer {
     _actionPerformerMap.put(Command.SET,   SetAction.class);
     _actionPerformerMap.put(Command.WHO,   WhoAction.class);
     _actionPerformerMap.put(Command.ABOUT, AboutAction.class);
+    _actionPerformerMap.put(Command.CLIP,  ClipAction.class);
   }
 
   public Class getActionClass(RequestI request) {

@@ -21,8 +21,8 @@ import java.net.URL;
 
 import javax.swing.JFrame;
 
-import com.jbrown.LaunchFrame;
-import com.jbrown.Main;
+import com.jbrown.jnet.LaunchFrame;
+import com.jbrown.jnet.Main;
 
 public class WinTray {
 

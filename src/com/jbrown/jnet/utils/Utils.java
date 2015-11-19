@@ -1,5 +1,12 @@
 package com.jbrown.jnet.utils;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -40,4 +47,32 @@ public class Utils {
     }
     return rv;
   }
+
+  public static void setClipboardContents(String content) {
+    StringSelection stringSelection = new StringSelection(content);
+    Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
+    clpbrd.setContents(stringSelection, null);
+  }
+
+  public static String getClipboardContents() {
+    String result = "";
+    Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+    Transferable contents = clipboard.getContents(null);
+    boolean hasTransferableText = (contents != null)
+        && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+
+    if (hasTransferableText) {
+        try {
+          result = (String) contents
+              .getTransferData(DataFlavor.stringFlavor);
+        } catch (UnsupportedFlavorException | IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+    }
+
+    return result;
+  }
+
 }

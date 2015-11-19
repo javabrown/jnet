@@ -8,6 +8,7 @@ import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.StringUtils;
 
 import static com.jbrown.jnet.utils.StringUtils.*;
+import static java.lang.String.format;
 
 public class Request implements RequestI {
   private Socket _socket;
@@ -105,5 +106,19 @@ public class Request implements RequestI {
   @Override
   public JsonMap getJsonMap() {
     return _jsonMap;
+  }
+
+  @Override
+  public String getRowParamsExcludingCommand(){
+    String line = _rowInput;
+    String value = null;
+    String[] arr = line.split(" ");
+
+    if(arr != null && arr.length > 1){
+      String command = arr[0];
+      value = line.replaceAll( format(".*\\b%s\\b", command), "" );
+    }
+
+    return value;
   }
 }

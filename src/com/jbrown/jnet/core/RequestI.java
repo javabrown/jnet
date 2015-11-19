@@ -8,6 +8,8 @@ public interface RequestI {
 	Command getCommand();
 	String[] getParameters();
 	String getRowCommand();
+	String getRowParamsExcludingCommand();
+
 	Socket getSocket();
   void setContext(SharedContextI context);
   SharedContextI getContext();

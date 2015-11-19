@@ -1,4 +1,4 @@
-package com.jbrown;
+package com.jbrown.jnet;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

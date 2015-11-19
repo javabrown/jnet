@@ -42,14 +42,17 @@ public class WorkerThread implements Runnable {
     _isRunning = true;
 
     try {
-       _writer = new PrintStream(_csocket.getOutputStream(), true);
+       //_writer = new PrintStream(_csocket.getOutputStream(), true);
        _reader = new BufferedReader(
            new InputStreamReader( _csocket.getInputStream(), KeysI.UTF_8));
 
        String command = "";
 
        while (!command.equalsIgnoreCase(KeysI.QUIT) && _isRunning) {
-         _writer.printf("\n\r%s> ", KeysI.PROMPT_K);
+         _writer = new PrintStream(_csocket.getOutputStream(), true);
+
+
+         _writer.printf("\n\r%s ", KeysI.PROMPT_K1);
          _writer.flush();
          String wireData = _reader.readLine();
          command = new WireData(wireData).getCommand();
@@ -58,6 +61,8 @@ public class WorkerThread implements Runnable {
              _responder.respond(new Request(_csocket, command));
 
          this.sendResponse(_writer, commandResult);
+
+
        }
     }
     catch (IOException e) {
@@ -84,6 +89,7 @@ public class WorkerThread implements Runnable {
 
   private void sendResponse(PrintStream out, String commandResult) throws IOException{
     out.printf("\n\r%s\n\r", commandResult);
+    out.printf("\n\r%s\n\r", "END");
     out.flush();
   }
 

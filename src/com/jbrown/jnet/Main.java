@@ -1,4 +1,4 @@
-package com.jbrown;
+package com.jbrown.jnet;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
