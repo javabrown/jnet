@@ -3,11 +3,11 @@ package com.jbrown.jnet.client.framework;
 public abstract class Task {
 
   public final void executeWith(Callback callback) {
-    execute();
+    String response = execute();
     if (callback != null) {
-      callback.call();
+      callback.call(response);
     }
   }
 
-  public abstract void execute();
+  public abstract String execute();
 }

@@ -8,7 +8,7 @@ public class SimpleTask extends Task {
   }
 
   @Override
-  public void execute() {
-    System.out.printf("Performed %s.\n", _command);
+  public String execute() {
+    return String.format("Performed %s.\n", _command);
   }
 }

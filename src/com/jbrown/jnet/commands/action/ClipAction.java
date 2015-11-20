@@ -1,6 +1,7 @@
 package com.jbrown.jnet.commands.action;
 
 import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
+import com.jbrown.jnet.core.Command;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
 import com.jbrown.jnet.utils.KeysI;
@@ -19,7 +20,7 @@ public class ClipAction implements ActionPerformerI<String>  {
 
     String clipData = Utils.getClipboardContents();
 
-    request.getContext().putCache(KeysI.CLIP_K, clipData);
+    request.getContext().putCache(Command.CLIP.getName(), clipData);
 
     return clipData;
   }

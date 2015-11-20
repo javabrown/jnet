@@ -14,5 +14,6 @@ public interface KeysI {
 
 	String LOCAL_HOST = "localhost";
 
-	String CLIP_K = "CLIP";
+	 
+	String END_K = "END";
 }
