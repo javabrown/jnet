@@ -13,6 +13,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import sun.awt.windows.WClipboard;
+
 public class Utils {
   public static String getIP() {
     try {
@@ -59,6 +61,31 @@ public class Utils {
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
     Transferable contents = clipboard.getContents(null);
+    boolean hasTransferableText = (contents != null)
+        && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
+
+    if (hasTransferableText) {
+        try {
+          result = (String) contents
+              .getTransferData(DataFlavor.stringFlavor);
+        } catch (UnsupportedFlavorException | IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+    }
+
+    return result;
+  }
+
+  public static String getClipboardContents(Clipboard clipboardSource) {
+    String result = "";
+
+    if(clipboardSource == null) {
+      clipboardSource = Toolkit.getDefaultToolkit().getSystemClipboard();
+    }
+
+    Transferable contents = clipboardSource.getContents(null);
+
     boolean hasTransferableText = (contents != null)
         && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
 
