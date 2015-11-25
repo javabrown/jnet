@@ -158,6 +158,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _hostField.setEditable(true);
     _portField.setEditable(true);
     _start.setEnabled(true);
+    _link.setEnabled(true);
   }
 
   public void startLinker(){
@@ -165,6 +166,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
         new ClientLinker(_hostField.getText(),
             Integer.parseInt(_portField.getText()), new JFrame());
     _linker.start();
+    
+    _hostField.setEditable(false);
+    _portField.setEditable(false);
+    _start.setEnabled(false);
+    _link.setEnabled(false);
   }
 
   public void stopLinker(){
@@ -172,6 +178,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
       _linker.stop();
       _linker = null;
      }
+     
+     _hostField.setEditable(true);
+     _portField.setEditable(true);
+     _start.setEnabled(true);
+     _link.setEnabled(true);
   }
 
   private Component getControl() {
@@ -257,7 +268,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     }
 
     _start.setActionCommand(COMMAND_HOST_K);
-    _start.setActionCommand(COMMAND_LINK_K);
+    _link.setActionCommand(COMMAND_LINK_K);
     _stop.setActionCommand(COMMAND_STOP_K);
     _exit.setActionCommand(COMMAND_EXIT_K);
 

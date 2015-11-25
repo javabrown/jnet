@@ -49,7 +49,7 @@ public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwn
   public String execute(ClientSocket socket) {
     String clipContent = _clipboard.getData();
 
-    clipContent = clipContent.replaceAll("\n", "\\n").replaceAll("\r", "\\r");
+    //clipContent = clipContent.replaceAll("\n\r", System.getProperty("line.separator"));
 
     boolean isNewContent = false;
 
@@ -62,8 +62,9 @@ public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwn
 
     if(isNewContent){
       try {
-        response = socket.executeCommand(String.format("%s %s",
-                Command.CLIP.getName(), _clipContent));
+        response = socket.executeCommand(String.format("%s %s", Command.CLIP.getName(), _clipContent));
+        //response = socket.executeCommand(String.format("%s %s",
+        //        Command.CLIP.getName(), Utils.encrypt(_clipContent)));
       } catch (IOException e) {
         e.printStackTrace();
       }

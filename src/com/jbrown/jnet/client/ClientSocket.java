@@ -57,7 +57,7 @@ public class ClientSocket {
       builder.append(aux);
     }
 
-    return builder.toString();
+    return builder.toString().trim();
   }
 
   private boolean openSocket() {

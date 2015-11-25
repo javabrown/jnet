@@ -27,13 +27,13 @@ public class Responder {
   public String respond(RequestI request) {
     AbstractAction<String> abs = new AbstractAction(request, _sharedContext);
     String result = abs.trigger();
-    request.getJsonMap().put("response", result);
-    try {
-      return request.getJsonMap().toJson();
-    } catch (ParseException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
-    }
+//    request.getJsonMap().put("response", result);
+//    try {
+//      return request.getJsonMap().toJson();
+//    } catch (ParseException e) {
+//      // TODO Auto-generated catch block
+//      e.printStackTrace();
+//    }
     return result;
   }
 

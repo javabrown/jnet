@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.jbrown.jnet.client.ClientSocket;
+import com.jbrown.jnet.client.task.ClipFetcherTask;
 import com.jbrown.jnet.client.task.ClipSetterTask;
 import com.jbrown.jnet.utils.StringUtils;
 
@@ -23,7 +24,7 @@ public class LinkTask extends TimerTask implements LinkTaskI {
     _client = client;
 
     _clipSetter = new ClipSetterTask();
-    _clipFetcher = new ClipSetterTask();
+    _clipFetcher = new ClipFetcherTask();
   }
 
   @Override

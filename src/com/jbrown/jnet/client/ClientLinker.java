@@ -33,11 +33,11 @@ public class ClientLinker {
     _task.unlink();
 
     _task = null;
-    _socket=null;
+    _socket = null;
   }
 
   public static void main(String[] args)  {
-    ClientLinker runner = new ClientLinker("192.168.8.130", 22, new JFrame());
+    ClientLinker runner = new ClientLinker("192.168.1.5", 11211, new JFrame());
 
     runner.start();
     JOptionPane.showMessageDialog(new JFrame(), "Runner");

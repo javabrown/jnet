@@ -29,10 +29,14 @@ public class ClipFetcherTask extends Task {
     }
 
     if (!isEmpty(newContent)) {
+      //newContent = Utils.decrypt(new String(newContent));
       String existingContent = _clipboard.getData();//Utils.getClipboardContents();
 
-      if (!isEquals(newContent, existingContent)) {
+      if (!isEmpty(existingContent) && !isEquals(newContent, existingContent)) {
         Utils.setClipboardContents(newContent);
+      }
+      else{
+        newContent = "";
       }
     }
 
