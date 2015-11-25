@@ -15,14 +15,11 @@ public class ClipAction implements ActionPerformerI<String>  {
     String params = request.getRowParamsExcludingCommand();
 
     if(!StringUtils.isEmpty(params)){
-      Utils.setClipboardContents(params);
+      //Utils.setClipboardContents(params);
+      request.getContext().putCache(Command.CLIP.getName(), params);
     }
 
-    String clipData = Utils.getClipboardContents();
-
-    request.getContext().putCache(Command.CLIP.getName(), clipData);
-
-    return clipData;
+    return request.getContext().getCache(Command.CLIP.getName());
   }
 
   @Override

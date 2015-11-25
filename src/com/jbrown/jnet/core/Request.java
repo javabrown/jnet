@@ -1,12 +1,8 @@
 package com.jbrown.jnet.core;
 
 import java.net.Socket;
-import java.util.Arrays;
-
 import com.jbrown.jnet.utils.JsonMap;
 import com.jbrown.jnet.utils.KeysI;
-import com.jbrown.jnet.utils.StringUtils;
-
 import static com.jbrown.jnet.utils.StringUtils.*;
 import static java.lang.String.format;
 
