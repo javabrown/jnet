@@ -37,6 +37,7 @@ import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
+import com.jbrown.jnet.client.ClientLinker;
 import com.jbrown.jnet.core.JnetContainer;
 import com.jbrown.jnet.ui.MoveMouseListener;
 import com.jbrown.jnet.ui.SpringUtilities;
@@ -62,6 +63,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
   private WinTray _winTray; //RK : For now lazy initialization is needed
   private JnetContainer _server;
+  private ClientLinker _linker;
 
   public static void main(String[] args) {
     new LaunchFrame();
@@ -158,6 +160,20 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _start.setEnabled(true);
   }
 
+  public void startLinker(){
+    _linker =
+        new ClientLinker(_hostField.getText(),
+            Integer.parseInt(_portField.getText()), new JFrame());
+    _linker.start();
+  }
+
+  public void stopLinker(){
+     if(_linker != null){
+      _linker.stop();
+      _linker = null;
+     }
+  }
+
   private Component getControl() {
     JPanel jp = new JPanel();
 
@@ -210,7 +226,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     super.setResizable(false);
     super.setAlwaysOnTop(true);
 
-    //super.setVisible(true);
+    super.setVisible(true);
 
 //    try {
 //      UIManager.setLookAndFeel(
@@ -298,11 +314,12 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
     if (e.getActionCommand().equalsIgnoreCase(COMMAND_LINK_K)) {
       _winTray.setActivityStatus(WinTray.Status.LINKED);
-      this.startServer();
+      this.startLinker();
     }
 
     if (e.getActionCommand().equalsIgnoreCase(COMMAND_STOP_K)) {
       _winTray.setActivityStatus(WinTray.Status.NOT_RUNNING);
+      this.stopLinker();
       this.stopServer();
     }
 

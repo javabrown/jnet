@@ -6,7 +6,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -30,6 +34,20 @@ public class Test1 {
         os.close();
 
         System.out.println(answer);
+        timer();
+
+        JOptionPane.showMessageDialog(new JFrame(), "Wait");
         System.exit(0);
     }
+
+    public static void timer(){
+      Timer timer = new Timer();
+      timer.schedule(new SayHello(), 0, 1000);
+    }
+}
+
+class SayHello extends TimerTask {
+  public void run() {
+     System.out.printf("\nHello World [ %s ]!", new Date());
+  }
 }
