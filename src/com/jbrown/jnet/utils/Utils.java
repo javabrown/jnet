@@ -16,6 +16,9 @@ import java.util.Collection;
 import sun.awt.windows.WClipboard;
 
 public class Utils {
+  private static BrownCrypter _encryptor = 
+      new BrownCrypter("sssssssxsdfddMyKeyssdhaa");
+  
   public static String getIP() {
     try {
       InetAddress ip = InetAddress.getLocalHost();
@@ -102,4 +105,11 @@ public class Utils {
     return result;
   }
 
+  public static String encrypt(String plainStr){
+    return _encryptor.encrypt(plainStr);
+  }
+  
+  public static String decrypt(String encriptedStr){
+    return _encryptor.decrypt(encriptedStr);
+  }
 }
