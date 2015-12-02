@@ -3,11 +3,13 @@ package com.jbrown.jnet.commands.action;
 import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.response.DefaultResponse;
+import com.jbrown.jnet.response.ResponseI;
 
-public class GetAction implements ActionPerformerI<String>{
+public class GetAction implements ActionPerformerI {
 
   @Override
-  public String perform(RequestI request, ErrorI errors) {
+  public ResponseI perform(RequestI request, ErrorI errors) {
     String[] params = request.getParameters();
 
     //String key = String.format("%s.%s",
@@ -17,7 +19,7 @@ public class GetAction implements ActionPerformerI<String>{
 
     String value = request.getContext().getCache(key);
 
-    return (value == null) ? "Not Found" : value;
+    return new DefaultResponse((value == null) ? "Not Found" : value);
   }
 
   @Override

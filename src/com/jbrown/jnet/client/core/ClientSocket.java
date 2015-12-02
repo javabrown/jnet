@@ -1,4 +1,4 @@
-package com.jbrown.jnet.client;
+package com.jbrown.jnet.client.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;

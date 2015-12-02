@@ -4,13 +4,15 @@ import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 import com.jbrown.jnet.core.Command;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.response.DefaultResponse;
+import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.StringUtils;
 import com.jbrown.jnet.utils.Utils;
 
-public class ClipAction implements ActionPerformerI<String>  {
+public class ClipAction implements ActionPerformerI {
   @Override
-  public String perform(RequestI request, ErrorI errors) {
+  public ResponseI perform(RequestI request, ErrorI errors) {
 
     String params = request.getRowParamsExcludingCommand();
 
@@ -19,7 +21,9 @@ public class ClipAction implements ActionPerformerI<String>  {
       request.getContext().putCache(Command.CLIP.getName(), params);
     }
 
-    return request.getContext().getCache(Command.CLIP.getName());
+    return
+        new DefaultResponse(
+            request.getContext().getCache(Command.CLIP.getName()));
   }
 
   @Override

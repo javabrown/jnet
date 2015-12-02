@@ -8,14 +8,10 @@ import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +29,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -166,7 +161,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
         new ClientLinker(_hostField.getText(),
             Integer.parseInt(_portField.getText()), new JFrame());
     _linker.start();
-    
+
     _hostField.setEditable(false);
     _portField.setEditable(false);
     _start.setEnabled(false);
@@ -178,7 +173,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
       _linker.stop();
       _linker = null;
      }
-     
+
      _hostField.setEditable(true);
      _portField.setEditable(true);
      _start.setEnabled(true);
@@ -233,8 +228,8 @@ public class LaunchFrame extends JFrame implements ActionListener {
     this.setLocation();
     super.setTitle(PROMPT_K);
     super.setDefaultCloseOperation(HIDE_ON_CLOSE);
-    super.setSize(305, 190);
-    super.setResizable(false);
+    super.setSize(330, 190);
+    super.setResizable(true);
     super.setAlwaysOnTop(true);
 
     super.setVisible(true);
@@ -256,11 +251,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
     if(SystemTray.isSupported()){
       //this.setUndecorated(true);
 
-      this.addWindowListener(new WindowAdapter() {
-        public void windowDeactivated(WindowEvent e) {
-          e.getWindow().setVisible(false);
-        }
-      });
+      //this.addWindowListener(new WindowAdapter() {
+      //  public void windowDeactivated(WindowEvent e) {
+      //    e.getWindow().setVisible(false);
+      //  }
+      //});
 
       ((JPanel)this.getContentPane()).setBorder(
           new BevelBorder(BevelBorder.LOWERED));

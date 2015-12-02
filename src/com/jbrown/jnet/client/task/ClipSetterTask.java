@@ -7,12 +7,13 @@ import java.awt.datatransfer.FlavorListener;
 import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 
-import com.jbrown.jnet.client.ClientSocket;
-import com.jbrown.jnet.client.framework.Task;
+import com.jbrown.jnet.client.Task;
+import com.jbrown.jnet.client.core.ClientSocket;
 import com.jbrown.jnet.core.Command;
 import com.jbrown.jnet.ui.ClipBoard;
-import com.jbrown.jnet.utils.StringUtils;
-import com.jbrown.jnet.utils.Utils;
+import com.jbrown.jnet.utils.KeysI;
+import static com.jbrown.jnet.utils.StringUtils.isEmpty;
+import static com.jbrown.jnet.utils.StringUtils.isEquals;
 
 public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwner {
   private String _clipContent;
@@ -47,35 +48,27 @@ public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwn
 
   @Override
   public String execute(ClientSocket socket) {
-    String clipContent = _clipboard.getData();
+    String clipData = _clipboard.getData();
 
-    //clipContent = clipContent.replaceAll("\n\r", System.getProperty("line.separator"));
+    // clipContent = clipContent.replaceAll("\n\r",
+    // System.getProperty("line.separator"));
 
-    boolean isNewContent = false;
-
-    if (!StringUtils.isEmpty(clipContent) && !_clipContent.equals(clipContent)){
-      _clipContent = clipContent;
-      isNewContent = true;
+    if (isEmpty(clipData)) {
+      return KeysI.EMPTY_K;
     }
 
-    String response = "";
+    String romoteData =
+        super.socketExecute(socket, Command.CLIP.getName());
 
-    if(isNewContent){
-      try {
-        response = socket.executeCommand(String.format("%s %s", Command.CLIP.getName(), _clipContent));
-        //response = socket.executeCommand(String.format("%s %s",
-        //        Command.CLIP.getName(), Utils.encrypt(_clipContent)));
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
+    if (!isEmpty(romoteData) && isEquals(romoteData, clipData)) {
+       return KeysI.EMPTY_K;
     }
 
-    return response;
+    return super.socketExecute(socket,
+        String.format("%s %s", Command.CLIP.getName(), clipData));
   }
 
   @Override
   public void lostOwnership(Clipboard clipboard, Transferable contents) {
-    // TODO Auto-generated method stub
-
   }
 }

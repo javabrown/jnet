@@ -9,14 +9,17 @@ import java.nio.charset.Charset;
 import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.response.DefaultResponse;
+import com.jbrown.jnet.response.ResponseI;
 
-public class WGetAction implements ActionPerformerI<String> {
+public class WGetAction implements ActionPerformerI {
 
   @Override
-  public String perform(RequestI request, ErrorI errors) {
+  public ResponseI perform(RequestI request, ErrorI errors) {
     String[] parameters = request.getParameters();
     String response = callURL(parameters[0]);
-    return response;
+
+    return new DefaultResponse(response);
   }
 
   @Override

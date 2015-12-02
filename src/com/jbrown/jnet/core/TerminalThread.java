@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 import com.jbrown.jnet.commands.Responder;
+import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
 
 public class TerminalThread implements Runnable {
@@ -54,7 +55,7 @@ public class TerminalThread implements Runnable {
          String wireData = _reader.readLine();
          command = new WireData(wireData).getCommand();
 
-         String commandResult =
+         ResponseI commandResult =
              _responder.respond(new Request(_csocket, command));
 
          this.sendResponse(_writer, commandResult);
@@ -82,8 +83,8 @@ public class TerminalThread implements Runnable {
     }
   }
 
-  private void sendResponse(PrintStream out, String commandResult) throws IOException{
-    out.printf("\n\r%s\n\r", commandResult);
+  private void sendResponse(PrintStream out, ResponseI response) throws IOException{
+    out.printf("\n\r%s\n\r", response.getResponse());
     out.flush();
   }
 

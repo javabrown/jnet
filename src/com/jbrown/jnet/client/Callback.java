@@ -1,6 +1,7 @@
-package com.jbrown.jnet.client.framework;
+package com.jbrown.jnet.client;
 
-import com.jbrown.jnet.client.ClientSocket;
+import com.jbrown.jnet.client.core.ClientSocket;
+
 
 public interface Callback {
   void call(String future);

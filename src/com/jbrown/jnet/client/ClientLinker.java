@@ -5,8 +5,9 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.jbrown.jnet.client.framework.LinkTask;
-import com.jbrown.jnet.client.framework.LinkTaskI;
+import com.jbrown.jnet.client.core.ClientSocket;
+import com.jbrown.jnet.client.core.LinkTask;
+import com.jbrown.jnet.client.core.LinkTaskI;
 
 public class ClientLinker {
   private ClientSocket _socket;
@@ -37,7 +38,7 @@ public class ClientLinker {
   }
 
   public static void main(String[] args)  {
-    ClientLinker runner = new ClientLinker("192.168.1.5", 11211, new JFrame());
+    ClientLinker runner = new ClientLinker("192.168.8.130", 22, new JFrame());
 
     runner.start();
     JOptionPane.showMessageDialog(new JFrame(), "Runner");

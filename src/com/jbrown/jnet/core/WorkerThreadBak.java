@@ -3,7 +3,6 @@ package com.jbrown.jnet.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -12,18 +11,18 @@ import com.jbrown.jnet.commands.Responder;
 import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
 
-public class WorkerThread implements Runnable {
+public class WorkerThreadBak implements Runnable {
   private String _clientThreadId;
   private Responder _responder;
 
   private Socket _csocket;
-  private ObjectOutputStream _writer = null;
+  private PrintStream _writer = null;
   private BufferedReader _reader = null;
   private InetAddress _clientAddress;
 
   private static boolean _isRunning;
 
-  public WorkerThread(String clientThreadId, Socket csocket, Responder responder) {
+  public WorkerThreadBak(String clientThreadId, Socket csocket, Responder responder) {
      _clientThreadId = clientThreadId;
      _csocket = csocket;
      _responder = responder;
@@ -44,17 +43,16 @@ public class WorkerThread implements Runnable {
     _isRunning = true;
 
     try {
-       //_writer = new PrintStream(_csocket.getOutputStream(), true);
        _reader = new BufferedReader(
            new InputStreamReader( _csocket.getInputStream(), KeysI.UTF_8));
 
        String command = "";
 
        while (!command.equalsIgnoreCase(KeysI.QUIT) && _isRunning) {
-         //_writer = new PrintStream(_csocket.getOutputStream(), true);
-         _writer = new ObjectOutputStream(_csocket.getOutputStream());
+         _writer = new PrintStream(_csocket.getOutputStream(), true);
 
-         _writer.writeObject(String.format("\n\r%s ", KeysI.PROMPT_K1));
+
+         _writer.printf("\n\r%s ", KeysI.PROMPT_K1);
          _writer.flush();
          String wireData = _reader.readLine();
          command = new WireData(wireData).getCommand();
@@ -87,9 +85,9 @@ public class WorkerThread implements Runnable {
     }
   }
 
-  private void sendResponse(ObjectOutputStream out, ResponseI response) throws IOException{
-    out.writeObject(String.format("\r%s\r", response.getResponse()));
-    out.writeObject(String.format("\r%s\r", "END"));
+  private void sendResponse(PrintStream out, ResponseI response) throws IOException{
+    out.printf("\n\r%s\n\r", response.getResponse());
+    out.printf("\n\r%s\n\r", "END");
     out.flush();
   }
 
@@ -103,6 +101,7 @@ public class WorkerThread implements Runnable {
     result = prime * result + ((_reader == null) ? 0 : _reader.hashCode());
     result = prime * result
         + ((_responder == null) ? 0 : _responder.hashCode());
+    result = prime * result + ((_writer == null) ? 0 : _writer.hashCode());
     return result;
   }
 
@@ -114,7 +113,7 @@ public class WorkerThread implements Runnable {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    WorkerThread other = (WorkerThread) obj;
+    WorkerThreadBak other = (WorkerThreadBak) obj;
     if (_clientThreadId == null) {
       if (other._clientThreadId != null)
         return false;
@@ -135,7 +134,11 @@ public class WorkerThread implements Runnable {
         return false;
     } else if (!_responder.equals(other._responder))
       return false;
-
+    if (_writer == null) {
+      if (other._writer != null)
+        return false;
+    } else if (!_writer.equals(other._writer))
+      return false;
     return true;
   }
 }

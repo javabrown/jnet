@@ -5,8 +5,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -20,7 +23,7 @@ import com.jbrown.jnet.commands.Responder;
 import static java.lang.String.format;
 
 public class BrownServer implements Runnable {
-  private ServerSocket _serverSocket;
+  private ServerSocketChannel _serverSocketChannel;
   private String _host;
   private int _port;
   private Responder _responder;
@@ -32,7 +35,12 @@ public class BrownServer implements Runnable {
   private static boolean _runningFlag;
 
   public BrownServer(String host, int port, Responder responder) throws IOException {
-    _serverSocket = new ServerSocket(port, 50, InetAddress.getByName(host));
+    //_serverSocket = new ServerSocket(port, 50, InetAddress.getByName(host));
+    _serverSocketChannel = ServerSocketChannel.open();
+
+    _serverSocketChannel.configureBlocking(true);
+    _serverSocketChannel.socket().bind(
+        new InetSocketAddress(InetAddress.getByName(host), port));
     _host = host;
     _port = port;
     _runningFlag = false;
@@ -52,7 +60,10 @@ public class BrownServer implements Runnable {
 
       while (_runningFlag) {
         try {
-          Socket clientSocket = _serverSocket.accept();
+          //Socket clientSocket = _serverSocket.accept();
+          SocketChannel clientChannel = _serverSocketChannel.accept();
+          Socket clientSocket = clientChannel.socket();
+
           System.out.println(clientSocket.getLocalSocketAddress().toString());
 
           String clientThreadId = format("t-%s", _clientThreadIndex++);
@@ -89,7 +100,7 @@ public class BrownServer implements Runnable {
     try {
       _responder.getSocketPool().shutdown();
       _runningFlag = false;
-      _serverSocket.close();
+      _serverSocketChannel.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
