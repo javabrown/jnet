@@ -3,6 +3,7 @@ package com.jbrown.jnet.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.net.InetAddress;
@@ -18,7 +19,7 @@ public class WorkerThread implements Runnable {
 
   private Socket _csocket;
   private ObjectOutputStream _writer = null;
-  private BufferedReader _reader = null;
+  private ObjectInputStream _reader = null;
   private InetAddress _clientAddress;
 
   private static boolean _isRunning;
@@ -45,8 +46,9 @@ public class WorkerThread implements Runnable {
 
     try {
        //_writer = new PrintStream(_csocket.getOutputStream(), true);
-       _reader = new BufferedReader(
-           new InputStreamReader( _csocket.getInputStream(), KeysI.UTF_8));
+       //_reader = new BufferedReader(
+       //    new InputStreamReader( _csocket.getInputStream(), KeysI.UTF_8));
+       _reader = new ObjectInputStream(_csocket.getInputStream());
 
        String command = "";
 
@@ -56,16 +58,17 @@ public class WorkerThread implements Runnable {
 
          _writer.writeObject(String.format("\n\r%s ", KeysI.PROMPT_K1));
          _writer.flush();
-         String wireData = _reader.readLine();
-         command = new WireData(wireData).getCommand();
+         Object wireData =  _reader.readObject();
+         command = new WireData((String) wireData).getCommand();
 
          ResponseI commandResult =
              _responder.respond(new Request(_csocket, command));
 
          this.sendResponse(_writer, commandResult);
+         _writer.close();
        }
     }
-    catch (IOException e) {
+    catch (Exception  e) {
        System.out.println(e);
     }
     finally{
