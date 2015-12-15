@@ -13,7 +13,6 @@ public class AboutAction implements ActionPerformerI<String> {
 
   @Override
   public boolean validate(RequestI request, ErrorI errors) {
-    // TODO Auto-generated method stub
     return true;
   }
 }
