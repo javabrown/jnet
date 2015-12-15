@@ -27,13 +27,7 @@ public class Responder {
   public String respond(RequestI request) {
     AbstractAction<String> abs = new AbstractAction(request, _sharedContext);
     String result = abs.trigger();
-//    request.getJsonMap().put("response", result);
-//    try {
-//      return request.getJsonMap().toJson();
-//    } catch (ParseException e) {
-//      // TODO Auto-generated catch block
-//      e.printStackTrace();
-//    }
+
     return result;
   }
 
@@ -45,39 +39,3 @@ public class Responder {
     return _socPool;
   }
 }
-
-//class SocketPool {
-//  private static int MAX_CONNECTION = 10;
-//
-//  private Map<String, WorkerThread> _workerThreadMap;
-//  private ThreadPoolExecutor  _threadExecutor;
-//  private int _clientThreadIndex;
-//
-//  public SocketPool(){
-//    _threadExecutor =
-//        (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_CONNECTION);
-//    _clientThreadIndex = 0;
-//  }
-//
-//  public boolean isConnectionAvailable(){
-//    return _workerThreadMap.size() < MAX_CONNECTION;
-//  }
-//
-//  public boolean registerClient(WorkerThread clientThread){
-//    String clientThreadId = format("client-thread-%s", _clientThreadIndex++);
-//
-//    if(_workerThreadMap.size() < MAX_CONNECTION){
-//      _workerThreadMap.put(clientThreadId, clientThread);
-//      _threadExecutor.execute(clientThread);
-//      return true;
-//    }
-//
-//    System.out.printf("Rejected %s", clientThreadId);
-//
-//    return false;
-//  }
-//
-//  public void unregisterClient(String clientThreadId){
-//    _workerThreadMap.remove(clientThreadId);
-//  }
-//}
