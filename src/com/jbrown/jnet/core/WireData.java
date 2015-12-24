@@ -1,5 +1,6 @@
 package com.jbrown.jnet.core;
 
+import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.StringUtils;
 
 public class WireData {
@@ -22,5 +23,4 @@ public class WireData {
 
     return filterInput;
   }
-
 }
