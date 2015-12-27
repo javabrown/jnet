@@ -89,7 +89,9 @@ class CharStream implements SocketIO.SocketIOI {
   @Override
   public void writeOutput(String output) throws Exception {
     _writer.printf("\n\r%s\n\r", output);
-    _writer.printf("\n\r%s\n\r", "END");
+    _writer.printf("\n\r%s\n\r", KeysI.END_K);
+    
+    _writer.printf("\n\r%s ", KeysI.PROMPT_K1);
     _writer.flush();
   }
 
