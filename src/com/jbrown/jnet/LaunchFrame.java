@@ -1,5 +1,11 @@
 package com.jbrown.jnet;
 
+import static com.jbrown.jnet.utils.KeysI.COMMAND_EXIT_K;
+import static com.jbrown.jnet.utils.KeysI.COMMAND_HOST_K;
+import static com.jbrown.jnet.utils.KeysI.COMMAND_LINK_K;
+import static com.jbrown.jnet.utils.KeysI.COMMAND_STOP_K;
+import static com.jbrown.jnet.utils.KeysI.PROMPT_K;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -40,8 +46,6 @@ import com.jbrown.jnet.ui.WinTray;
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.Utils;
 
-import static com.jbrown.jnet.utils.KeysI.*;
-
 public class LaunchFrame extends JFrame implements ActionListener {
   private JButton _start;
   private JButton _link;
@@ -61,7 +65,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
   private ClientLinker _linker;
 
   public static void main(String[] args) {
-    new LaunchFrame();
+       new LaunchFrame();
   }
 
   public LaunchFrame() {
@@ -313,28 +317,26 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_HOST_K)) {
+    if (LaunchOption.HOST.typeOf(e.getActionCommand())) {
        _winTray.setActivityStatus(WinTray.Status.RUNNING);
        this.startServer();
     }
 
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_LINK_K)) {
+    if (LaunchOption.LINK.typeOf(e.getActionCommand())) {
       _winTray.setActivityStatus(WinTray.Status.LINKED);
       this.startLinker();
     }
 
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_STOP_K)) {
+    if (LaunchOption.STOP.typeOf(e.getActionCommand())) {
       _winTray.setActivityStatus(WinTray.Status.NOT_RUNNING);
       this.stopLinker();
       this.stopServer();
     }
 
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_EXIT_K)) {
+    if (LaunchOption.EXIT.typeOf(e.getActionCommand())) {
       System.exit(0);
     }
 
     //_statusLabel.setText(getStatus());
   }
 }
-
-

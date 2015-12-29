@@ -17,4 +17,5 @@ public interface KeysI {
 
 	String END_K = "END";
 	String EMPTY_K = "";
+	String COMMA_K = ",";
 }
