@@ -14,6 +14,9 @@ public interface KeysI {
 
 	String LOCAL_HOST = "localhost";
 
-	 
+
 	String END_K = "END";
+	String EMPTY_K = "";
+	String COMMA_K = ",";
+	String COLON_K = ":";
 }

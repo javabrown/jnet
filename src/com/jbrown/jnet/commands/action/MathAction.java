@@ -8,15 +8,17 @@ import sun.org.mozilla.javascript.internal.json.JsonParser;
 import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.response.DefaultResponse;
+import com.jbrown.jnet.response.ResponseI;
 
-public class MathAction implements ActionPerformerI<String> {
+public class MathAction implements ActionPerformerI  {
 
   @Override
-  public String perform(RequestI request, ErrorI errors) {
+  public ResponseI perform(RequestI request, ErrorI errors) {
     String[] parameters = request.getParameters();
     String response = eval(parameters);
 
-    return response;
+    return new DefaultResponse(response);
   }
 
   @Override

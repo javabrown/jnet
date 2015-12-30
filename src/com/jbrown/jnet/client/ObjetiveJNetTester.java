@@ -11,16 +11,15 @@ import java.net.Socket;
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.StringUtils;
 
-public class JNetTester {
+public class ObjetiveJNetTester {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         String serverAddress = "192.168.8.130";
         Socket s = new Socket(serverAddress, 22);
 
-        PrintStream writer = new PrintStream(s.getOutputStream(), true);
+        ObjectOutputStream writer = new ObjectOutputStream(s.getOutputStream());
 
-        BufferedReader reader = new BufferedReader(
-            new InputStreamReader( s.getInputStream(), "UTF-8"));
+        ObjectInputStream reader = new ObjectInputStream( s.getInputStream());
 
 
         //-----(1)------
@@ -35,41 +34,36 @@ public class JNetTester {
         runCommand(reader, writer, String.format("%s\r", "quit"));
 
         System.out.println("**Jnet Test done!! **");
-
-        writer.close();
-        reader.close();
-        s.close();
-
         System.exit(0);
     }
 
-    static void runCommand(BufferedReader reader, PrintStream writer,
+    static void runCommand(ObjectInputStream reader, ObjectOutputStream writer,
         String cmd) throws IOException, ClassNotFoundException{
       cmd = String.format("%s\r", "who");
-      writer.printf(cmd);
+      writer.writeObject(cmd);
       writer.flush();
 
       String answer = read(reader);
       System.out.printf("Command = %s \n Result = %s", cmd, answer);
     }
 
-    private static String read(BufferedReader reader) throws IOException {
-      StringBuilder builder = new StringBuilder();
-      String aux = "";
+    private static String read(ObjectInputStream reader) throws IOException, ClassNotFoundException {
+      //StringBuilder builder = new StringBuilder();
+      Object obj = reader.readObject();
 
-      while ((aux = reader.readLine()) != null) {
-          String resp = aux.trim();
-          if(resp.equalsIgnoreCase("END")){
-            break;
-          }
+//      while ((aux = reader.readObject()) != null) {
+//          String resp = aux.trim();
+//          if(resp.equalsIgnoreCase("END")){
+//            break;
+//          }
+//
+//          if(StringUtils.isEmpty(resp) || resp.equalsIgnoreCase(KeysI.PROMPT_K1)){
+//            continue;
+//          }
+//
+//          builder.append(aux);
+//      }
 
-          if(StringUtils.isEmpty(resp) || resp.equalsIgnoreCase(KeysI.PROMPT_K1)){
-            continue;
-          }
-
-          builder.append(aux);
-      }
-
-      return builder.toString();
+      return obj.toString();
     }
 }

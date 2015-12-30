@@ -40,5 +40,13 @@ public class JnetContainer {
   public boolean isRunning(){
     return _server.isRunning();
   }
+
+  public String getHost(){
+    return _server.getHost();
+  }
+
+  public int getPort(){
+    return _server.getPort();
+  }
 }
 

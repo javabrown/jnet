@@ -1,5 +1,11 @@
 package com.jbrown.jnet;
 
+import static com.jbrown.jnet.utils.KeysI.COMMAND_EXIT_K;
+import static com.jbrown.jnet.utils.KeysI.COMMAND_HOST_K;
+import static com.jbrown.jnet.utils.KeysI.COMMAND_LINK_K;
+import static com.jbrown.jnet.utils.KeysI.COMMAND_STOP_K;
+import static com.jbrown.jnet.utils.KeysI.PROMPT_K;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -8,14 +14,10 @@ import java.awt.Font;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.SystemTray;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +35,6 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -44,8 +45,6 @@ import com.jbrown.jnet.ui.SpringUtilities;
 import com.jbrown.jnet.ui.WinTray;
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.Utils;
-
-import static com.jbrown.jnet.utils.KeysI.*;
 
 public class LaunchFrame extends JFrame implements ActionListener {
   private JButton _start;
@@ -62,14 +61,19 @@ public class LaunchFrame extends JFrame implements ActionListener {
   private JLabel _portLabel;
 
   private WinTray _winTray; //RK : For now lazy initialization is needed
-  private JnetContainer _server;
-  private ClientLinker _linker;
+  //private JnetContainer _server;
+  //private ClientLinker _linker;
+
+  private JNetServer _server;
+  private JNetDelegate _jNetDelegate;
+  private String jNetServerAddress;
 
   public static void main(String[] args) {
-    new LaunchFrame();
+       new LaunchFrame(JNetDelegate.getInstance());
   }
 
-  public LaunchFrame() {
+  public LaunchFrame(JNetDelegate jNetDelegate) {
+    _jNetDelegate = jNetDelegate;
     _start = new JButton(COMMAND_HOST_K);
     _link = new JButton(COMMAND_LINK_K);
     _stop = new JButton(COMMAND_STOP_K);
@@ -124,12 +128,17 @@ public class LaunchFrame extends JFrame implements ActionListener {
     setEditableHost(false);
 
     try {
-      _server = new JnetContainer(_hostField.getText(),
+      _server =
+          _jNetDelegate.getJNetServerSpace().createServer(_hostField.getText(),
           Integer.parseInt(_portField.getText()));
+
+      //_server = new JnetContainer(_hostField.getText(),
+      //    Integer.parseInt(_portField.getText()));
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
-          _server.start();
+          //_server.start();
+          _server.startServer();
         }
       });
 
@@ -148,7 +157,9 @@ public class LaunchFrame extends JFrame implements ActionListener {
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
-          _server.stop();
+          //_server.stop();
+          _jNetDelegate.getJNetServerSpace().distroyServer(
+              _server.getJNetAddress());
         }
       });
 
@@ -162,11 +173,13 @@ public class LaunchFrame extends JFrame implements ActionListener {
   }
 
   public void startLinker(){
-    _linker =
+    /*_linker =
         new ClientLinker(_hostField.getText(),
             Integer.parseInt(_portField.getText()), new JFrame());
-    _linker.start();
-    
+       _linker.start();  */
+    _jNetDelegate.getJNetLinker().startLinker(_hostField.getText(),
+        Integer.parseInt(_portField.getText()));
+
     _hostField.setEditable(false);
     _portField.setEditable(false);
     _start.setEnabled(false);
@@ -174,11 +187,12 @@ public class LaunchFrame extends JFrame implements ActionListener {
   }
 
   public void stopLinker(){
-     if(_linker != null){
+     /*if(_linker != null){
       _linker.stop();
       _linker = null;
-     }
-     
+     }*/
+    _jNetDelegate.getJNetLinker().stopLinker();
+
      _hostField.setEditable(true);
      _portField.setEditable(true);
      _start.setEnabled(true);
@@ -233,8 +247,8 @@ public class LaunchFrame extends JFrame implements ActionListener {
     this.setLocation();
     super.setTitle(PROMPT_K);
     super.setDefaultCloseOperation(HIDE_ON_CLOSE);
-    super.setSize(305, 190);
-    super.setResizable(false);
+    super.setSize(330, 190);
+    super.setResizable(true);
     super.setAlwaysOnTop(true);
 
     super.setVisible(true);
@@ -256,11 +270,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
     if(SystemTray.isSupported()){
       //this.setUndecorated(true);
 
-      this.addWindowListener(new WindowAdapter() {
-        public void windowDeactivated(WindowEvent e) {
-          e.getWindow().setVisible(false);
-        }
-      });
+      //this.addWindowListener(new WindowAdapter() {
+      //  public void windowDeactivated(WindowEvent e) {
+      //    e.getWindow().setVisible(false);
+      //  }
+      //});
 
       ((JPanel)this.getContentPane()).setBorder(
           new BevelBorder(BevelBorder.LOWERED));
@@ -318,28 +332,26 @@ public class LaunchFrame extends JFrame implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_HOST_K)) {
+    if (LaunchOption.HOST.typeOf(e.getActionCommand())) {
        _winTray.setActivityStatus(WinTray.Status.RUNNING);
        this.startServer();
     }
 
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_LINK_K)) {
+    if (LaunchOption.LINK.typeOf(e.getActionCommand())) {
       _winTray.setActivityStatus(WinTray.Status.LINKED);
       this.startLinker();
     }
 
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_STOP_K)) {
+    if (LaunchOption.STOP.typeOf(e.getActionCommand())) {
       _winTray.setActivityStatus(WinTray.Status.NOT_RUNNING);
       this.stopLinker();
       this.stopServer();
     }
 
-    if (e.getActionCommand().equalsIgnoreCase(COMMAND_EXIT_K)) {
+    if (LaunchOption.EXIT.typeOf(e.getActionCommand())) {
       System.exit(0);
     }
 
     //_statusLabel.setText(getStatus());
   }
 }
-
-

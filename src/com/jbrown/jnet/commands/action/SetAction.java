@@ -3,13 +3,16 @@ package com.jbrown.jnet.commands.action;
 import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.response.DefaultResponse;
+import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.StringUtils;
+
 import static java.lang.String.format;
 
-public class SetAction  implements ActionPerformerI<String> {
+public class SetAction  implements ActionPerformerI {
 
   @Override
-  public String perform(RequestI request, ErrorI errors) {
+  public ResponseI perform(RequestI request, ErrorI errors) {
     String[] params = request.getParameters();
 
     //String key = String.format("%s.%s",
@@ -19,7 +22,8 @@ public class SetAction  implements ActionPerformerI<String> {
     String value = getCacheValue(request);
 
     request.getContext().putCache(key, value);
-    return "saved!";
+
+    return new DefaultResponse("saved!");
   }
 
   @Override

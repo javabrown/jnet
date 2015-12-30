@@ -5,8 +5,9 @@ import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.jbrown.jnet.client.framework.LinkTask;
-import com.jbrown.jnet.client.framework.LinkTaskI;
+import com.jbrown.jnet.client.core.ClientSocket;
+import com.jbrown.jnet.client.core.LinkTask;
+import com.jbrown.jnet.client.core.LinkTaskI;
 
 public class ClientLinker {
   private ClientSocket _socket;
@@ -14,7 +15,7 @@ public class ClientLinker {
   private String _host;
   private int _port;
 
-  public ClientLinker(String host, int port, JFrame frame){
+  public ClientLinker(String host, int port){
     _socket = null;
     _task = null;
     _host = host;
@@ -22,7 +23,7 @@ public class ClientLinker {
   }
 
   public void start(){
-    _socket = new ClientSocket(_host, _port,  new JFrame());
+    _socket = new ClientSocket(_host, _port);
     _socket.open();
     _task = new LinkTask(_socket);
     _task.link();
@@ -37,7 +38,7 @@ public class ClientLinker {
   }
 
   public static void main(String[] args)  {
-    ClientLinker runner = new ClientLinker("192.168.1.5", 11211, new JFrame());
+    ClientLinker runner = new ClientLinker("192.168.1.6", 22);
 
     runner.start();
     JOptionPane.showMessageDialog(new JFrame(), "Runner");

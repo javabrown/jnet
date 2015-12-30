@@ -4,11 +4,13 @@ import com.jbrown.jnet.commands.Responder;
 import com.jbrown.jnet.commands.action.AbstractAction.ActionPerformerI;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
+import com.jbrown.jnet.response.DefaultResponse;
+import com.jbrown.jnet.response.ResponseI;
 
-public class HelpAction implements ActionPerformerI<String> {
+public class HelpAction implements ActionPerformerI {
   @Override
-  public String perform(RequestI request, ErrorI errors) {
-    return request.getCommand().getCommandList();
+  public ResponseI perform(RequestI request, ErrorI errors) {
+    return new DefaultResponse(request.getCommand().getCommandList());
   }
 
   @Override

@@ -7,11 +7,12 @@ import sun.misc.PerformanceLogger;
 import com.jbrown.jnet.core.ActionPerformer;
 import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
-import com.jbrown.jnet.core.ResponseI;
 import com.jbrown.jnet.core.SharedContextI;
+import com.jbrown.jnet.response.DefaultResponse;
+import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.StringUtils;
 
-public class AbstractAction<T> implements ActionI<T> {
+public class AbstractAction implements ActionI {
   protected RequestI _request;
   protected ErrorI _errors;
 
@@ -74,8 +75,8 @@ public class AbstractAction<T> implements ActionI<T> {
 //  }
 
   @Override
-  public T trigger() {
-    T response = null;
+  public ResponseI trigger() {
+    ResponseI response = null;
 
     if(_request.getCommand() == null){
       _errors.addErrors(
@@ -88,18 +89,20 @@ public class AbstractAction<T> implements ActionI<T> {
       boolean isValid = performer.validate(_request, _errors);
 
       if(isValid){
-        response = (T) performer.perform(_request, _errors);
+        response = performer.perform(_request, _errors);
 
         if(_errors.noError() && response != null){
           return response;
         }
       }
       else{
-        response = (T) StringUtils.stringify(_errors.getError());
+        response =
+            new DefaultResponse(StringUtils.stringify(_errors.getError()));
       }
     }
     else{
-      response = (T) StringUtils.stringify(_errors.getError());
+      response =
+          new DefaultResponse(StringUtils.stringify(_errors.getError()));
     }
 
     return response;
@@ -108,8 +111,8 @@ public class AbstractAction<T> implements ActionI<T> {
 //  abstract T perform();
 //  abstract boolean validate();
 
-  interface ActionPerformerI<T> {
-      T perform(RequestI request, ErrorI errors);
+  interface ActionPerformerI {
+      ResponseI perform(RequestI request, ErrorI errors);
       boolean validate(RequestI request, ErrorI errors);
   }
 }

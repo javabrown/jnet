@@ -11,7 +11,7 @@ import com.jbrown.jnet.commands.Responder;
 import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
 
-public class TerminalThread implements Runnable {
+public class WorkerThreadBak implements Runnable {
   private String _clientThreadId;
   private Responder _responder;
 
@@ -22,7 +22,7 @@ public class TerminalThread implements Runnable {
 
   private static boolean _isRunning;
 
-  public TerminalThread(String clientThreadId, Socket csocket, Responder responder) {
+  public WorkerThreadBak(String clientThreadId, Socket csocket, Responder responder) {
      _clientThreadId = clientThreadId;
      _csocket = csocket;
      _responder = responder;
@@ -43,14 +43,16 @@ public class TerminalThread implements Runnable {
     _isRunning = true;
 
     try {
-       _writer = new PrintStream(_csocket.getOutputStream(), true);
        _reader = new BufferedReader(
            new InputStreamReader( _csocket.getInputStream(), KeysI.UTF_8));
 
        String command = "";
 
        while (!command.equalsIgnoreCase(KeysI.QUIT) && _isRunning) {
-         _writer.printf("\n\r%s> ", KeysI.PROMPT_K1);
+         _writer = new PrintStream(_csocket.getOutputStream(), true);
+
+
+         _writer.printf("\n\r%s ", KeysI.PROMPT_K1);
          _writer.flush();
          String wireData = _reader.readLine();
          command = new WireData(wireData).getCommand();
@@ -85,6 +87,7 @@ public class TerminalThread implements Runnable {
 
   private void sendResponse(PrintStream out, ResponseI response) throws IOException{
     out.printf("\n\r%s\n\r", response.getResponse());
+    out.printf("\n\r%s\n\r", "END");
     out.flush();
   }
 
@@ -110,7 +113,7 @@ public class TerminalThread implements Runnable {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    TerminalThread other = (TerminalThread) obj;
+    WorkerThreadBak other = (WorkerThreadBak) obj;
     if (_clientThreadId == null) {
       if (other._clientThreadId != null)
         return false;

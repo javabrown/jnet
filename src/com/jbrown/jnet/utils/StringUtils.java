@@ -96,11 +96,17 @@ public class StringUtils {
   }
 
   public static boolean isEmpty(String... stringArray) {
+    if(stringArray == null || stringArray.length == 0){
+      return true;
+    }
+
     for (String s : stringArray) {
       if (isEmpty(s)) {
         return true;
       }
     }
+
+
     return false;
   }
 

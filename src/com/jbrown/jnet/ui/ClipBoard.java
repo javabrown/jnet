@@ -21,7 +21,7 @@ public final class ClipBoard implements ClipboardOwner {
   }
 
   public String getData() {
-    String result = "";
+    String result = null;
     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
     // odd: the Object param of getContents is not currently used
     Transferable contents = clipboard.getContents(null);
