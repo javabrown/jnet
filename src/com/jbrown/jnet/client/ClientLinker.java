@@ -38,7 +38,7 @@ public class ClientLinker {
   }
 
   public static void main(String[] args)  {
-    ClientLinker runner = new ClientLinker("192.168.8.130", 22);
+    ClientLinker runner = new ClientLinker("192.168.1.6", 22);
 
     runner.start();
     JOptionPane.showMessageDialog(new JFrame(), "Runner");
