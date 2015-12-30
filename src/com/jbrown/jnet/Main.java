@@ -13,13 +13,14 @@ public class Main {
             LaunchOption.getAllOptions());
         System.exit(0);
       }
-      else if(!StringUtils.isEmpty(args)){
-        System.out.println("Command line interface in pending..");
+      else if(!StringUtils.isEmpty(args))
+      {
+        new CommandLineLaunch(JNetDelegate.getInstance()).processCommand(args);
       }
-      else{
-        new LaunchFrame().launch();
+      else
+      {
+        new LaunchFrame(JNetDelegate.getInstance()).launch();
       }
-
     } catch (Exception e) {
       e.printStackTrace();
       JOptionPane.showMessageDialog(new JFrame(), e.getMessage());

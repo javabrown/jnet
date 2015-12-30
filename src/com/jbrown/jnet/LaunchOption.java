@@ -16,7 +16,7 @@ public enum LaunchOption {
     return _name;
   }
 
-  public LaunchOption find(String optionName) {
+  public static LaunchOption find(String optionName) {
     if (!StringUtils.isEmpty(optionName)) {
       for (LaunchOption opt : values()) {
         if (opt.getName().equalsIgnoreCase(optionName)) {

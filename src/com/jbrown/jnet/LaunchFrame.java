@@ -61,14 +61,19 @@ public class LaunchFrame extends JFrame implements ActionListener {
   private JLabel _portLabel;
 
   private WinTray _winTray; //RK : For now lazy initialization is needed
-  private JnetContainer _server;
-  private ClientLinker _linker;
+  //private JnetContainer _server;
+  //private ClientLinker _linker;
+
+  private JNetServer _server;
+  private JNetDelegate _jNetDelegate;
+  private String jNetServerAddress;
 
   public static void main(String[] args) {
-       new LaunchFrame();
+       new LaunchFrame(JNetDelegate.getInstance());
   }
 
-  public LaunchFrame() {
+  public LaunchFrame(JNetDelegate jNetDelegate) {
+    _jNetDelegate = jNetDelegate;
     _start = new JButton(COMMAND_HOST_K);
     _link = new JButton(COMMAND_LINK_K);
     _stop = new JButton(COMMAND_STOP_K);
@@ -123,12 +128,17 @@ public class LaunchFrame extends JFrame implements ActionListener {
     setEditableHost(false);
 
     try {
-      _server = new JnetContainer(_hostField.getText(),
+      _server =
+          _jNetDelegate.getJNetServerSpace().createServer(_hostField.getText(),
           Integer.parseInt(_portField.getText()));
+
+      //_server = new JnetContainer(_hostField.getText(),
+      //    Integer.parseInt(_portField.getText()));
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
-          _server.start();
+          //_server.start();
+          _server.startServer();
         }
       });
 
@@ -147,7 +157,9 @@ public class LaunchFrame extends JFrame implements ActionListener {
       SwingUtilities.invokeLater(new Runnable() {
         @Override
         public void run() {
-          _server.stop();
+          //_server.stop();
+          _jNetDelegate.getJNetServerSpace().distroyServer(
+              _server.getJNetAddress());
         }
       });
 
@@ -161,10 +173,12 @@ public class LaunchFrame extends JFrame implements ActionListener {
   }
 
   public void startLinker(){
-    _linker =
+    /*_linker =
         new ClientLinker(_hostField.getText(),
             Integer.parseInt(_portField.getText()), new JFrame());
-    _linker.start();
+       _linker.start();  */
+    _jNetDelegate.getJNetLinker().startLinker(_hostField.getText(),
+        Integer.parseInt(_portField.getText()));
 
     _hostField.setEditable(false);
     _portField.setEditable(false);
@@ -173,10 +187,11 @@ public class LaunchFrame extends JFrame implements ActionListener {
   }
 
   public void stopLinker(){
-     if(_linker != null){
+     /*if(_linker != null){
       _linker.stop();
       _linker = null;
-     }
+     }*/
+    _jNetDelegate.getJNetLinker().stopLinker();
 
      _hostField.setEditable(true);
      _portField.setEditable(true);
