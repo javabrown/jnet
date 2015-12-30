@@ -92,7 +92,11 @@ public class BrownServer implements Runnable {
     return _runningFlag;
   }
 
-  public int port() {
+  public String getHost() {
+    return _host;
+  }
+
+  public int getPort() {
     return _port;
   }
 
