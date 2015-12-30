@@ -15,7 +15,7 @@ public class ClientLinker {
   private String _host;
   private int _port;
 
-  public ClientLinker(String host, int port, JFrame frame){
+  public ClientLinker(String host, int port){
     _socket = null;
     _task = null;
     _host = host;
@@ -23,7 +23,7 @@ public class ClientLinker {
   }
 
   public void start(){
-    _socket = new ClientSocket(_host, _port,  new JFrame());
+    _socket = new ClientSocket(_host, _port);
     _socket.open();
     _task = new LinkTask(_socket);
     _task.link();
@@ -38,7 +38,7 @@ public class ClientLinker {
   }
 
   public static void main(String[] args)  {
-    ClientLinker runner = new ClientLinker("192.168.8.130", 22, new JFrame());
+    ClientLinker runner = new ClientLinker("192.168.8.130", 22);
 
     runner.start();
     JOptionPane.showMessageDialog(new JFrame(), "Runner");

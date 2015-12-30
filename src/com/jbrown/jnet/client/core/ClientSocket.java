@@ -21,10 +21,10 @@ public class ClientSocket {
   private PrintStream _socWriter;
   private BufferedReader _socReader;
 
-  public ClientSocket(String host, int port, JFrame frame) {
+  public ClientSocket(String host, int port) {
     _host = host;
     _port = port;
-    _frame = frame;
+    _frame = new JFrame();
     _socket = null;
   }
 
@@ -64,8 +64,8 @@ public class ClientSocket {
     try {
       _socket = new Socket(_host, _port);
     } catch (IOException e) {
-      JOptionPane.showMessageDialog(_frame, e.getMessage());
       e.printStackTrace();
+      JOptionPane.showMessageDialog(_frame, e.getMessage());
       return false;
     }
 
@@ -91,8 +91,8 @@ public class ClientSocket {
       this.closeStream();
       _socket.close();
     } catch (IOException e) {
-      JOptionPane.showMessageDialog(_frame, e.getMessage());
       e.printStackTrace();
+      JOptionPane.showMessageDialog(_frame, e.getMessage());
       return false;
     }
     finally{
@@ -110,8 +110,8 @@ public class ClientSocket {
       _socWriter = null;
       _socReader = null;
     } catch (IOException e) {
-      JOptionPane.showMessageDialog(_frame, e.getMessage());
       e.printStackTrace();
+      JOptionPane.showMessageDialog(_frame, e.getMessage());
       return false;
     }
 
