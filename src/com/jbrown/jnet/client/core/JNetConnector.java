@@ -5,13 +5,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.Socket;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.StringUtils;
 
-public class ClientSocket {
+public class JNetConnector implements JNetConnectorI {
   private String _host;
   private int _port;
 
@@ -21,22 +22,49 @@ public class ClientSocket {
   private PrintStream _socWriter;
   private BufferedReader _socReader;
 
-  public ClientSocket(String host, int port) {
-    _host = host;
-    _port = port;
-    _frame = new JFrame();
+
+  public JNetConnector() {
+    _host = null;
+    _port = 0;
     _socket = null;
+    _frame = new JFrame();
+    _socWriter = null;
+    _socReader = null;
   }
 
-  public void open(){
+//  public ClientSocket(String host, int port) {
+//    _host = host;
+//    _port = port;
+//    _frame = new JFrame();
+//    _socket = null;
+//  }
+
+
+  @Override
+  public void connect(String host, int port) {
+    _host = host;
+    _port = port;
+    _socket = null;
+
     this.openSocket();
     this.openStream();
   }
 
-  public void close(){
-    this.closeSocket();
+  @Override
+  public void disconnect(){
+    this.closeStreamAndSocket();
   }
 
+//  private void open(){
+//    this.openSocket();
+//    this.openStream();
+//  }
+
+//  private void close(){
+//    this.closeSocket();
+//  }
+
+  @Override
   public synchronized String executeCommand(String cmd) throws IOException {
     StringBuilder builder = new StringBuilder();
     String aux = "";
@@ -86,7 +114,7 @@ public class ClientSocket {
     return true;
   }
 
-  private boolean closeSocket() {
+  private boolean closeStreamAndSocket() {
     try {
       this.closeStream();
       _socket.close();

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import javax.swing.JFrame;
 
-import com.jbrown.jnet.client.ClientLinker;
+import com.jbrown.jnet.client.LinkRunner;
 import com.jbrown.jnet.commands.Responder;
 
 

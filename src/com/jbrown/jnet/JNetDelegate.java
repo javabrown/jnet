@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.jbrown.jnet.client.ClientLinker;
+import com.jbrown.jnet.client.LinkRunner;
 import com.jbrown.jnet.core.JnetContainer;
 import com.jbrown.jnet.utils.KeyMaker;
 
@@ -133,7 +133,7 @@ class JNetServer {
 
 
 class JNetLinker {
-  private ClientLinker _linker;
+  private LinkRunner _linker;
 
   private static JNetLinker _instance;
 
@@ -149,9 +149,9 @@ class JNetLinker {
     _linker = null;
   }
 
-  private ClientLinker createJNetLink(String host, int port) {
+  private LinkRunner createJNetLink(String host, int port) {
     if(_linker == null){
-      _linker = new ClientLinker(host, port);
+      _linker = new LinkRunner(host, port);
     }
 
     return _linker;

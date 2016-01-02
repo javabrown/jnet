@@ -38,7 +38,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
-import com.jbrown.jnet.client.ClientLinker;
+import com.jbrown.jnet.client.LinkRunner;
 import com.jbrown.jnet.core.JnetContainer;
 import com.jbrown.jnet.ui.MoveMouseListener;
 import com.jbrown.jnet.ui.SpringUtilities;

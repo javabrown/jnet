@@ -1,36 +1,34 @@
 package com.jbrown.jnet.client;
 
-import java.io.IOException;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import com.jbrown.jnet.client.core.ClientSocket;
-import com.jbrown.jnet.client.core.LinkTask;
+import com.jbrown.jnet.client.core.JNetConnector;
+import com.jbrown.jnet.client.core.JNetConnectorI;
+import com.jbrown.jnet.client.core.ClipboardLink;
 import com.jbrown.jnet.client.core.LinkTaskI;
 
-public class ClientLinker {
-  private ClientSocket _socket;
+public class LinkRunner {
+  private JNetConnectorI _socket;
   private LinkTaskI _task;
   private String _host;
   private int _port;
 
-  public ClientLinker(String host, int port){
-    _socket = null;
+  public LinkRunner(String host, int port){
+    _socket = new JNetConnector();
     _task = null;
     _host = host;
     _port = port;
   }
 
   public void start(){
-    _socket = new ClientSocket(_host, _port);
-    _socket.open();
-    _task = new LinkTask(_socket);
+    _socket.connect(_host, _port);
+    _task = new ClipboardLink(_socket);
     _task.link();
   }
 
   public void stop(){
-    _socket.close();
+    _socket.disconnect();
     _task.unlink();
 
     _task = null;
@@ -38,7 +36,7 @@ public class ClientLinker {
   }
 
   public static void main(String[] args)  {
-    ClientLinker runner = new ClientLinker("192.168.1.6", 22);
+    LinkRunner runner = new LinkRunner("localhost", 22);
 
     runner.start();
     JOptionPane.showMessageDialog(new JFrame(), "Runner");

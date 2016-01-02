@@ -1,7 +1,7 @@
 package com.jbrown.jnet.client.task;
 
-import com.jbrown.jnet.client.core.ClientSocket;
+import com.jbrown.jnet.client.core.JNetConnector;
 
 public interface TaskI {
-  String execute(ClientSocket socket);
+  String execute(JNetConnector socket);
 }

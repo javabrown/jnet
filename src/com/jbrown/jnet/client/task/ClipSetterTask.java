@@ -8,14 +8,17 @@ import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 
 import com.jbrown.jnet.client.Task;
-import com.jbrown.jnet.client.core.ClientSocket;
+import com.jbrown.jnet.client.core.JNetConnector;
+import com.jbrown.jnet.client.core.JNetConnectorI;
+import com.jbrown.jnet.client.core.JNetTaskI;
 import com.jbrown.jnet.core.Command;
 import com.jbrown.jnet.ui.ClipBoard;
 import com.jbrown.jnet.utils.KeysI;
+
 import static com.jbrown.jnet.utils.StringUtils.isEmpty;
 import static com.jbrown.jnet.utils.StringUtils.isEquals;
 
-public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwner {
+public class ClipSetterTask implements JNetTaskI, FlavorListener, ClipboardOwner {
   private String _clipContent;
   private ClipBoard _clipboard;
 
@@ -34,7 +37,7 @@ public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwn
     //}
   }
 
-  private String submit(ClientSocket socket) {
+  private String submit(JNetConnector socket) {
     String response = "";
 
     try {
@@ -46,8 +49,34 @@ public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwn
     return response;
   }
 
+//  @Override
+//  public String execute(ClientSocket socket) {
+//    String clipData = _clipboard.getData();
+//
+//    // clipContent = clipContent.replaceAll("\n\r",
+//    // System.getProperty("line.separator"));
+//
+//    if (isEmpty(clipData)) {
+//      return KeysI.EMPTY_K;
+//    }
+//
+//    String romoteData =
+//        super.socketExecute(socket, Command.CLIP.getName());
+//
+//    if (!isEmpty(romoteData) && isEquals(romoteData, clipData)) {
+//       return KeysI.EMPTY_K;
+//    }
+//
+//    return super.socketExecute(socket,
+//        String.format("%s %s", Command.CLIP.getName(), clipData));
+//  }
+
   @Override
-  public String execute(ClientSocket socket) {
+  public void lostOwnership(Clipboard clipboard, Transferable contents) {
+  }
+
+  @Override
+  public String execute(JNetConnectorI connector) {
     String clipData = _clipboard.getData();
 
     // clipContent = clipContent.replaceAll("\n\r",
@@ -57,18 +86,25 @@ public class ClipSetterTask extends Task implements FlavorListener, ClipboardOwn
       return KeysI.EMPTY_K;
     }
 
-    String romoteData =
-        super.socketExecute(socket, Command.CLIP.getName());
+    String romoteData = KeysI.EMPTY_K;
+
+    try {
+      romoteData = connector.executeCommand(Command.CLIP.getName());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     if (!isEmpty(romoteData) && isEquals(romoteData, clipData)) {
        return KeysI.EMPTY_K;
     }
 
-    return super.socketExecute(socket,
-        String.format("%s %s", Command.CLIP.getName(), clipData));
-  }
+    try {
+      romoteData = connector.executeCommand(
+          String.format("%s %s", Command.CLIP.getName(), clipData));
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-  @Override
-  public void lostOwnership(Clipboard clipboard, Transferable contents) {
+    return romoteData;
   }
 }

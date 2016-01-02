@@ -5,7 +5,7 @@ import static com.jbrown.jnet.utils.StringUtils.isEquals;
 
 import java.io.IOException;
 
-import com.jbrown.jnet.client.core.ClientSocket;
+import com.jbrown.jnet.client.core.JNetConnector;
 import com.jbrown.jnet.core.Command;
 import com.jbrown.jnet.utils.KeysI;
 
@@ -19,10 +19,10 @@ public abstract class Task {
       }
   }
 
-  public abstract String execute(ClientSocket socket);
+  public abstract String execute(JNetConnector socket);
 
 
-  protected String socketExecute(ClientSocket socket, String command) {
+  protected String socketExecute(JNetConnector socket, String command) {
     try {
       return socket.executeCommand(command);
 

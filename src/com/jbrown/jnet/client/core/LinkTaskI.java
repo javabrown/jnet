@@ -4,7 +4,7 @@ import com.jbrown.jnet.client.Task;
 
 
 public interface LinkTaskI {
-  Task getClipSetter();
+  //Task getClipSetter();
   void link();
   void unlink();
 }
