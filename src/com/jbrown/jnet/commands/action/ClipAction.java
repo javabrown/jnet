@@ -6,9 +6,7 @@ import com.jbrown.jnet.core.ErrorI;
 import com.jbrown.jnet.core.RequestI;
 import com.jbrown.jnet.response.DefaultResponse;
 import com.jbrown.jnet.response.ResponseI;
-import com.jbrown.jnet.utils.KeysI;
 import com.jbrown.jnet.utils.StringUtils;
-import com.jbrown.jnet.utils.Utils;
 
 public class ClipAction implements ActionPerformerI {
   @Override
