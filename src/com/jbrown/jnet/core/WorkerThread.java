@@ -57,6 +57,7 @@ public class WorkerThread implements Runnable {
        boolean isQuitCommand = false;
 
        do {
+         _socketIO.showPromot();
          String command = _socketIO.read().getCommand();
          isQuitCommand = command.equalsIgnoreCase(KeysI.QUIT);
 

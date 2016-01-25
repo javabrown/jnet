@@ -64,11 +64,12 @@ public class BrownServer implements Runnable {
           SocketChannel clientChannel = _serverSocketChannel.accept();
           Socket clientSocket = clientChannel.socket();
 
-          System.out.println(clientSocket.getLocalSocketAddress().toString());
-
           String clientThreadId = format("t-%s", _clientThreadIndex++);
           WorkerThread clientThread = new WorkerThread(clientThreadId,
               clientSocket, _responder);
+
+          System.out.printf("\nConnected with client:%s |  thread-id=%s\n",
+              clientSocket.getInetAddress().toString(), clientThreadId);
 
           //_workerThreadMap.put(clientThreadId, clientThread);
           //_threadExecutor.execute(clientThread);

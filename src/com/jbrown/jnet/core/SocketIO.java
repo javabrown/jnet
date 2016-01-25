@@ -29,6 +29,12 @@ class SocketIO {
     _io.writeOutput(output);
   }
 
+  void showPromot(){
+    if(_io.isPromptAvailable()){
+      _io.showPrompt();
+    }
+  }
+
   public void close() throws Exception {
     _io.close();
   }
@@ -36,6 +42,8 @@ class SocketIO {
   interface SocketIOI {
     String readInput() throws Exception;
     void writeOutput(String output) throws Exception;
+    boolean isPromptAvailable();
+    void showPrompt();
     void close() throws Exception;
   }
 }
@@ -67,6 +75,16 @@ class ObjectStream implements SocketIO.SocketIOI {
     _writer.close();
     _reader.close();
   }
+
+  @Override
+  public boolean isPromptAvailable() {
+    return false;
+  }
+
+  @Override
+  public void showPrompt() {
+    throw new RuntimeException("PROMP not available in ObjectStream");
+  }
 }
 
 class CharStream implements SocketIO.SocketIOI {
@@ -90,8 +108,9 @@ class CharStream implements SocketIO.SocketIOI {
   public void writeOutput(String output) throws Exception {
     _writer.printf("\n\r%s\n\r", output);
     _writer.printf("\n\r%s\n\r", KeysI.END_K);
-    
-    _writer.printf("\n\r%s ", KeysI.PROMPT_K1);
+
+    //_writer.printf("\n\r%s ", KeysI.PROMPT_K1);
+    //this.showPrompt();
     _writer.flush();
   }
 
@@ -99,5 +118,15 @@ class CharStream implements SocketIO.SocketIOI {
   public void close() throws Exception {
     _writer.close();
     _reader.close();
+  }
+
+  @Override
+  public boolean isPromptAvailable() {
+    return true;
+  }
+
+  @Override
+  public void showPrompt() {
+    _writer.printf("\n\r%s ", KeysI.PROMPT_K1);;
   }
 }
