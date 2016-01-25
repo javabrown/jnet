@@ -21,15 +21,15 @@ public class ObjetiveJNetTester {
 
         ObjectInputStream reader = new ObjectInputStream( s.getInputStream());
 
-
+        System.out.printf("[---------------- Test Begin -----------------]");
         //-----(1)------
         runCommand(reader, writer, String.format("%s\r", "ping"));
-        //-------------
+        //--------------
 
         //-----(2)------
         runCommand(reader, writer, String.format("%s\r", "who"));
-        //-------------
-
+        //--------------
+        System.out.printf("[---------------- Test End -----------------]");
 
         runCommand(reader, writer, String.format("%s\r", "quit"));
 

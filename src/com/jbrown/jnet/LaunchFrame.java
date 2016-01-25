@@ -100,7 +100,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     }
 
     if(image != null){
-      _statusLabel = new JLabel(KeysI.PROMPT_K, new ImageIcon(image), JLabel.LEADING);
+     _statusLabel = new JLabel(KeysI.PROMPT_K, new ImageIcon(image), JLabel.LEADING);
     }
     else{
       _statusLabel = new JLabel(KeysI.PROMPT_K, JLabel.CENTER);
