@@ -1,47 +1,60 @@
 package com.jbrown.jnet;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.math.BigInteger;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.net.UnknownHostException;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
+import java.util.List;
 
-import javax.net.ssl.SSLServerSocketFactory;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
+import com.jbrown.jnet.utils.FileHelper;
 
 public class Test {
   public static void main(String args[]) throws Exception {
-    System.setProperty("javax.net.ssl.keyStore", "lfkeystore2");
-    System.setProperty("javax.net.ssl.keyStorePassword", "wshr.ut");
+     System.out.println("Hello");
+     File a = new File("C:/Users/rkhan/Desktop/a/");
+     File b = new File("C:/Users/rkhan/Desktop/b/");
+     
+     Path from = Paths.get("C:/Users/rkhan/Desktop/a/");
+     Path to = Paths.get("C:/Users/rkhan/Desktop/b/");
+     
+     //==
+     try {
+       WatchService watcher = from.getFileSystem().newWatchService();
+       from.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, 
+       StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_MODIFY);
 
-    SSLServerSocketFactory ssf = (SSLServerSocketFactory) SSLServerSocketFactory
-        .getDefault();
-    ServerSocket ss = ssf.createServerSocket(5432);
-    while (true) {
-      Socket s = ss.accept();
-      SSLSession session = ((SSLSocket) s).getSession();
-      Certificate[] cchain2 = session.getLocalCertificates();
-      for (int i = 0; i < cchain2.length; i++) {
-        System.out.println(((X509Certificate) cchain2[i]).getSubjectDN());
-      }
-      System.out.println("Peer host is " + session.getPeerHost());
-      System.out.println("Cipher is " + session.getCipherSuite());
-      System.out.println("Protocol is " + session.getProtocol());
-      System.out.println("ID is " + new BigInteger(session.getId()));
-      System.out.println("Session created in " + session.getCreationTime());
-      System.out
-          .println("Session accessed in " + session.getLastAccessedTime());
+       WatchKey watckKey = watcher.take();
 
-      PrintStream out = new PrintStream(s.getOutputStream());
-      out.println("Hi");
-      out.close();
-      s.close();
-    }
+       while(true){
+         List<WatchEvent<?>> events = watckKey.pollEvents();
+         for (WatchEvent event : events) {
+              if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+                  System.out.println("Created: ");
+                  System.out.println( FileHelper.areInSync(a, b) );
+                  FileHelper.synchronize(a, b, true);
+              }
+              if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+                  System.out.println("Delete: ");
+                  System.out.println( FileHelper.areInSync(a, b) );
+                  FileHelper.synchronize(a, b, true);
+              }
+              if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+                  System.out.println("Modify: ");
+                  System.out.println( FileHelper.areInSync(a, b) );
+                  FileHelper.synchronize(a, b, true);
+              }
+          }
+       }
+    } catch (Exception e) {
+        System.out.println("Error: " + e.toString());
+    }     
+     //==
+     
+     System.out.println( FileHelper.areInSync(a, b) );
+     FileHelper.synchronize(a, b, true);
+     
   }
 }

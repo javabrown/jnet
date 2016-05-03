@@ -49,7 +49,7 @@ public class WorkerThread implements Runnable {
     SocketIO socketIO = null;
 
     try {
-        //_csocket.setSoTimeout(3000000);
+       //_csocket.setSoTimeout(3000000);
        //_writer = new ObjectOutputStream(_csocket.getOutputStream());
        //_reader = new ObjectInputStream(_csocket.getInputStream());
       _socketIO = new SocketIO(_csocket);
@@ -61,7 +61,7 @@ public class WorkerThread implements Runnable {
          String command = _socketIO.read().getCommand();
          isQuitCommand = command.equalsIgnoreCase(KeysI.QUIT);
 
-         if(!isQuitCommand){
+         if(!isQuitCommand) {
            ResponseI result =
                _responder.respond(new Request(_csocket, command));
 
