@@ -13,7 +13,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import sun.awt.windows.WClipboard;
+//import sun.awt.windows.WClipboard;
 
 public class Utils {
   private static BrownCrypter _encryptor = 

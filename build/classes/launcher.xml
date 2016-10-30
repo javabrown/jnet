@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="launcher" class="com.jbrown.ui.Launcher" lazy-init="true">
+		<property name="dimension"><ref bean="dimension" /></property>
+		<property name="xMenuBar"><ref bean="menuBar" /></property>
+		<!-- property name="xDesktop"><ref bean="xDesk" /></property -->
+		<property name="xViews">
+		 	<list>
+		 		<ref bean="xStepView" />
+		 	</list>
+		</property>
+	</bean>
+
+	<bean id="dimension" class="java.awt.Dimension">
+		<constructor-arg type="int" value="800" />
+		<constructor-arg type="int" value="550" />
+	</bean>
+	
+	<!-- ***************** Menu Section Begin **************** -->
+	<bean id="menuBar" class="com.jbrown.ui.XMenuBar">
+		<property name="xMenus">
+		 	<list>
+		 		<ref bean="options-menus" />
+		 	</list>
+		</property>
+	</bean>
+	
+	<bean id="options-menus" class="com.jbrown.ui.XMenu">
+		<property name="text" value="Options"/>
+		<property name="mnemonics" value="O"/>
+		<property name="menuOptions">
+		 	<list>
+		 		<ref bean="serverViewerMenuItem" />
+		 		<ref bean="exitMenuItem" />
+		 	</list>
+		</property>
+	</bean>
+
+	<bean id="serverViewerMenuItem" class="com.jbrown.ui.XMenuItem">
+		<property name="text" value="Server Viewer"/>
+		<property name="mnemonics" value="S"/>
+	</bean>
+	
+	<bean id="exitMenuItem" class="com.jbrown.ui.XMenuItem">
+		<property name="text" value="Exit"/>
+		<property name="mnemonics" value="E"/>
+	</bean>
+	<!-- ***************** Menu Section End **************** -->
+	
+	
+	<!-- **************** XSector Definition Begin ********* -->
+	<bean id="xStepDesktop" class="com.jbrown.ui.XDesktop">
+		<property name="middleSector">
+		    <ref bean="middleSector"/>
+		</property>
+		<property name="eastSector">
+		    <ref bean="eastSector"/>
+		</property>
+		<property name="westSector">
+		    <ref bean="westSector"/>
+		</property>
+		<property name="northSector">
+		    <ref bean="northSector"/>
+		</property>
+		<property name="southSector">
+		    <ref bean="southSector"/>
+		</property>
+	</bean>
+	
+	<bean id="middleSector" class="com.jbrown.ui.XSector"><property name="XBorder" value="false"/></bean>
+	<bean id="eastSector" class="com.jbrown.ui.XSector"><property name="XBorder" value="false"/></bean>
+	<bean id="westSector" class="com.jbrown.ui.XSector"><property name="XBorder" value="false"/></bean>
+	<bean id="northSector" class="com.jbrown.ui.XSector"><property name="XBorder" value="false"/></bean>
+	<bean id="southSector" class="com.jbrown.ui.XSector"></bean>
+	<!-- **************** XSector Definition End  ********** -->
+	
+	
+	<!-- **************** XView definition Begin ********* -->
+	<!-- Begin-@1: xStepTemplate   -->
+	<bean id="xStepView" class="com.jbrown.ui.XStepRecorderView" lazy-init="true" init-method="pushXView">
+		<property name="xCommands">
+			<list>
+				<ref bean="recordCommand" />
+				<ref bean="saveCommand" />
+				<ref bean="resetCommand" />
+			</list>
+		</property>
+		
+		<property name="eventGraph"><ref bean="xEventGraph" /></property>
+		
+		<property name="fileEditor"><ref bean="fileEditor"/> </property>
+		
+		<property name="xDesktop"><ref bean="xStepDesktop" /></property>
+	 
+		<property name="systemTray"><ref bean="systemTray" /></property>
+		
+		<property name="eventManager"><ref bean="eventManager"/></property>
+		
+		<property name="xController"><ref bean="xController" /></property>
+	</bean>  
+	
+	<bean id="recordCommand" class="com.jbrown.ui.XCommand">
+	    	<property name="command" value="Record"/>
+	    	<property name="shortcut" value="R"/>
+	</bean>
+	
+	<bean id="saveCommand" class="com.jbrown.ui.XCommand">
+	    	<property name="command" value="Save"/>
+	    	<property name="shortcut" value="S"/>
+	</bean>
+	
+	<bean id="repeatCommand" class="com.jbrown.ui.XCommand">
+	    	<property name="command" value="Repeat"/>
+	    	<property name="shortcut" value="P"/>
+	</bean>
+	<bean id="resetCommand" class="com.jbrown.ui.XCommand">
+	    	<property name="command" value="ReSet"/>
+	    	<property name="shortcut" value="E"/>
+	</bean>	
+	
+	<bean id="eventManager" class="com.jbrown.ui.XStepRecorderEventManager">
+		<constructor-arg ref="xController"/>
+	</bean>
+	
+	<bean name="systemTray" class="com.jbrown.ui.WindowsSystemTray">
+		<constructor-arg ref="eventManager"/>
+	</bean>
+	
+	<bean name="xController" class="com.jbrown.ui.controller.XStepController" lazy-init="true" init-method="initializeScanner">
+		<property name="appDataObserver"> <bean class="com.jbrown.observers.AppDataObserver"/> </property>
+		<property name="activity"> <ref bean="activity" /> </property>
+	</bean>
+		
+	<bean name="activity" class="com.jbrown.core.activity.TweetActivity">
+		<constructor-arg index="0" value="c:/test/tweets.tsv"/>
+		<constructor-arg index="1" value="true"/>
+		<constructor-arg index="2" value="3"/>
+	</bean>
+	<!-- End-@1 -->
+	
+	
+	<!-- Begin-@2: xEventGraph   -->
+	<bean id="xEventGraph" class="com.jbrown.ui.XEventGraph"/>
+	<!-- End-@2 -->
+	
+	<bean id="fileEditor" class="com.jbrown.ui.FileEditor"/>
+	
+	<!-- **************** XView Definition End  ********** -->
+	
+	
+</beans>

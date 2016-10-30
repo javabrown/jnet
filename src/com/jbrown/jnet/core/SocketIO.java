@@ -10,7 +10,7 @@ import java.net.Socket;
 
 import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
+//import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.IO;
 
 class SocketIO {
   private SocketIOI _io;

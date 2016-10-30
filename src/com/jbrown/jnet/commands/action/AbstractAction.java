@@ -2,7 +2,7 @@ package com.jbrown.jnet.commands.action;
 
 import java.lang.reflect.Constructor;
 
-import sun.misc.PerformanceLogger;
+//import sun.misc.PerformanceLogger;
 
 import com.jbrown.jnet.core.ActionPerformer;
 import com.jbrown.jnet.core.ErrorI;

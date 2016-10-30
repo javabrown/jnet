@@ -3,7 +3,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
-import sun.org.mozilla.javascript.internal.json.JsonParser;
+//import sun.org.mozilla.javascript.internal.json.JsonParser;
 
 public class JsUtils {
   public static String escape(String str) {
