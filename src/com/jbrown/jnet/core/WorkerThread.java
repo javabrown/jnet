@@ -14,7 +14,7 @@ import com.jbrown.jnet.commands.Responder;
 import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
 
-public class WorkerThread implements Runnable {
+public class WorkerThread implements WorkerThreadI {
   private String _clientThreadId;
   private Responder _responder;
 
@@ -35,6 +35,7 @@ public class WorkerThread implements Runnable {
      _isRunning = false;
   }
 
+  @Override
   public String getThreadId(){
     return _clientThreadId;
   }
@@ -43,20 +44,20 @@ public class WorkerThread implements Runnable {
     _isRunning = false;
     this.closeActivity();
   }
-
+ 
+  
   public void run() {
     _isRunning = true;
-    SocketIO socketIO = null;
+    //SocketIO socketIO = null;
 
     try {
-        //_csocket.setSoTimeout(3000000);
-       //_writer = new ObjectOutputStream(_csocket.getOutputStream());
-       //_reader = new ObjectInputStream(_csocket.getInputStream());
+       //socketIO.setSoTimeout(3000000);
+       //_socketIO = new SocketIO(_csocket);
       _socketIO = new SocketIO(_csocket);
-
+       
        boolean isQuitCommand = false;
 
-       do {
+       //do {
          String command = _socketIO.read().getCommand();
          isQuitCommand = command.equalsIgnoreCase(KeysI.QUIT);
 
@@ -67,7 +68,8 @@ public class WorkerThread implements Runnable {
            _socketIO.writeOutput(String.format("\r%s\r", result.getResponse()));
          }
 
-       } while (!isQuitCommand && _isRunning);
+         System.out.println("Done");
+       //} while (!isQuitCommand && _isRunning && false);
     }
     catch (Exception  e) {
        System.out.println(e);

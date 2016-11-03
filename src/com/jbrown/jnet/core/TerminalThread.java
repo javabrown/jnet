@@ -11,7 +11,7 @@ import com.jbrown.jnet.commands.Responder;
 import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
 
-public class TerminalThread implements Runnable {
+public class TerminalThread implements WorkerThreadI {
   private String _clientThreadId;
   private Responder _responder;
 
@@ -30,6 +30,7 @@ public class TerminalThread implements Runnable {
      _isRunning = false;
   }
 
+  @Override
   public String getThreadId(){
     return _clientThreadId;
   }

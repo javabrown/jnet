@@ -10,8 +10,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+ 
 
 //import sun.awt.windows.WClipboard;
 
@@ -112,4 +114,19 @@ public class Utils {
   public static String decrypt(String encriptedStr){
     return _encryptor.decrypt(encriptedStr);
   }
+  
+  public static String toJson(Object obj) {
+    JsonMap map = new JsonMap();
+
+    String response = "{'javabrown_response' : 'internal-error'}";
+
+    try {
+      map.put("javabrown_response", obj);
+      response = map.toJson();
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return response;
+  }  
 }

@@ -28,14 +28,15 @@ public class BrownServer implements Runnable {
   private int _port;
   private Responder _responder;
 
-  //private ThreadPoolExecutor _threadExecutor;
-  //private Map<String, WorkerThread> _workerThreadMap;
-   private int _clientThreadIndex;
+  // private ThreadPoolExecutor _threadExecutor;
+  // private Map<String, WorkerThread> _workerThreadMap;
+  private int _clientThreadIndex;
 
   private static boolean _runningFlag;
 
-  public BrownServer(String host, int port, Responder responder) throws IOException {
-    //_serverSocket = new ServerSocket(port, 50, InetAddress.getByName(host));
+  public BrownServer(String host, int port, Responder responder)
+      throws IOException {
+    // _serverSocket = new ServerSocket(port, 50, InetAddress.getByName(host));
     _serverSocketChannel = ServerSocketChannel.open();
 
     _serverSocketChannel.configureBlocking(true);
@@ -46,8 +47,8 @@ public class BrownServer implements Runnable {
     _runningFlag = false;
     _responder = responder;
 
-    //_threadExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-    //_workerThreadMap = new HashMap<String, WorkerThread>();
+    // _threadExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+    // _workerThreadMap = new HashMap<String, WorkerThread>();
     _clientThreadIndex = 0;
   }
 
@@ -60,30 +61,51 @@ public class BrownServer implements Runnable {
 
       while (_runningFlag) {
         try {
-          //Socket clientSocket = _serverSocket.accept();
-          SocketChannel clientChannel = _serverSocketChannel.accept();
+          // Socket clientSocket = _serverSocket.accept();
+          SocketChannel clientChannel = null;
+
+          try {
+            clientChannel = _serverSocketChannel.accept();
+          } catch (IOException e) {
+            if (!_runningFlag) {
+              System.out.println("Server Stopped.");
+              return;
+            }
+            throw new RuntimeException("Error accepting client connection", e);
+          }
+
           Socket clientSocket = clientChannel.socket();
 
           System.out.println(clientSocket.getLocalSocketAddress().toString());
 
           String clientThreadId = format("t-%s", _clientThreadIndex++);
-          WorkerThread clientThread = new WorkerThread(clientThreadId,
-              clientSocket, _responder);
 
-          //_workerThreadMap.put(clientThreadId, clientThread);
-          //_threadExecutor.execute(clientThread);
+          // WorkerThread clientThread = new WorkerThread(clientThreadId,
+          // clientSocket, _responder);
+
+          WorkerThreadI clientThread = null;
+          boolean isTelnetTerminal = false; // TODO - option to be added later
+                                            // in UI
+
+          if (isTelnetTerminal) {
+            clientThread = new TerminalThread(clientThreadId, clientSocket,
+                _responder);
+          } else {
+            clientThread = new WorkerThread(clientThreadId, clientSocket,
+                _responder);
+          }
+
+          // _workerThreadMap.put(clientThreadId, clientThread);
+          // _threadExecutor.execute(clientThread);
           _responder.getSocketPool().registerClient(clientThread);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
           ex.printStackTrace();
-        }
-        finally {
+        } finally {
 
         }
       }
 
-    }
-    finally {
+    } finally {
       _responder.getSocketPool().getThreadPoolExecutor().shutdownNow();
     }
   }
@@ -112,78 +134,3 @@ public class BrownServer implements Runnable {
     return _runningFlag;
   }
 }
-
-//class WorkerThread implements Runnable {
-//  private String _clientThreadId;
-//  private Responder _responder;
-//
-//  private Socket _csocket;
-//  private PrintStream _writer = null;
-//  private BufferedReader _reader = null;
-//
-//  private static boolean _isRunning;
-//
-//  public WorkerThread(String clientThreadId, Socket csocket, Responder responder) {
-//     _clientThreadId = clientThreadId;
-//     _csocket = csocket;
-//     _responder = responder;
-//     _isRunning = false;
-//  }
-//
-//  public String getThreadId(){
-//    return _clientThreadId;
-//  }
-//
-//  public void stop(){
-//    _isRunning = false;
-//    this.closeActivity();
-//  }
-//
-//  public void run() {
-//    _isRunning = true;
-//
-//
-//    try {
-//       _writer = new PrintStream(_csocket.getOutputStream());
-//       _reader = new BufferedReader(
-//           new InputStreamReader( _csocket.getInputStream(), KeysI.UTF_8));
-//
-//       String command = "";
-//
-//       while (!command.equalsIgnoreCase(KeysI.QUIT) || _isRunning) {
-//         _writer.printf("\n\r%s> ", KeysI.PROMPT_K);
-//         _writer.flush();
-//         command = _reader.readLine().trim();
-//
-//         String commandResult =
-//             _responder.respond(new Request(_csocket, command));
-//
-//         this.sendResponse(_writer, commandResult);
-//       }
-//    }
-//    catch (IOException e) {
-//       System.out.println(e);
-//    }
-//    finally{
-//        this.closeActivity();
-//    }
-// }
-//
-//  private void closeActivity(){
-//    try {
-//      _writer.close();
-//      _reader.close();
-//      _csocket.close();
-//      _csocket= null;
-//      System.out.printf("[Socket closed on client : %s]",
-//          _csocket.getInetAddress());
-//    } catch (Exception e) {
-//      e.printStackTrace();
-//    }
-//  }
-//
-//  private void sendResponse(PrintStream out, String commandResult) throws IOException{
-//    out.printf("\n\r%s\n\r", commandResult);
-//    out.flush();
-//  }
-//}

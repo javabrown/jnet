@@ -83,7 +83,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     _hostField = new JTextField(Utils.getIP(), 10);
 
     _portLabel = new JLabel("PORT");
-    _portField = new JTextField("22", 4);
+    _portField = new JTextField("2013", 4);
 
 
     InputStream inputStream = this.getClass().getResourceAsStream(
@@ -152,7 +152,7 @@ public class LaunchFrame extends JFrame implements ActionListener {
     }
   }
 
-  public void stopServer(){
+  public void stopServer(){System.out.println("LaunchFrame==>stopServer called");
     try {
       SwingUtilities.invokeLater(new Runnable() {
         @Override

@@ -16,22 +16,23 @@ import javax.swing.JOptionPane;
 public class SocketPool {
   private static int MAX_CONNECTION = 10;
 
-  private Map<String, WorkerThread> _workerThreadMap;
+  private Map<String, WorkerThreadI> _workerThreadMap;
   private ThreadPoolExecutor  _threadExecutor;
   private int _clientThreadIndex;
 
   public SocketPool(){
-    _workerThreadMap = new HashMap<String, WorkerThread>();
+    _workerThreadMap = new HashMap<String, WorkerThreadI>();
     _threadExecutor =
         (ThreadPoolExecutor) Executors.newFixedThreadPool(MAX_CONNECTION);
     _clientThreadIndex = 0;
   }
 
   public boolean isConnectionAvailable(){
+    System.out.printf("Thread count = %s\n", _workerThreadMap.size());
     return _workerThreadMap.size() < MAX_CONNECTION;
   }
 
-  public boolean registerClient(WorkerThread clientThread){
+  public boolean registerClient(WorkerThreadI clientThread){
     if(this.isConnectionAvailable()){
       _workerThreadMap.put(clientThread.getThreadId(), clientThread);
       _threadExecutor.execute(clientThread);

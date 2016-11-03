@@ -21,6 +21,7 @@ public class JnetContainer {
 
   public boolean start() {
     if(_server == null || _server.isRunning()){
+      System.out.println("Server start failed.");
       return false;
     }
 
