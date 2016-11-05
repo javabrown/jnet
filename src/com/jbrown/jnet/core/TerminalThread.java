@@ -57,7 +57,7 @@ public class TerminalThread implements WorkerThreadI {
          command = new WireData(wireData).getCommand();
 
          ResponseI commandResult =
-             _responder.respond(new Request(_csocket, command));
+             _responder.respond(new Request(_csocket, command, null));
 
          this.sendResponse(_writer, commandResult);
        }
