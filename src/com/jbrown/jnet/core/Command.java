@@ -13,8 +13,10 @@ public enum Command {
    WHO("who", "Returns ip-address of the remote client"),
    QUIT("quit", "Quits JNET terminal."),
    CLIP("clip", "Store clipboard content into socket-cache with key='clip'"),
-   ABOUT("about", "\n\rJNET 1.0\n\rDesigned & Developed by Raja Khan (getrk@yahoo.com)", false)
-
+   ABOUT("about", "\n\rJNET 1.0\n\rDesigned & Developed by Raja Khan (getrk@yahoo.com)", false),
+   
+   NOTEPAD("/notepad/", "Launch Notepad in Windows, Mac"),
+    
    ;
 
 

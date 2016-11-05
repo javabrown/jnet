@@ -1,6 +1,8 @@
 package com.jbrown.jnet.core;
 
 import java.net.Socket;
+import java.util.List;
+import java.util.Map;
 
 import com.jbrown.jnet.utils.JsonMap;
 
@@ -14,4 +16,10 @@ public interface RequestI {
   void setContext(SharedContextI context);
   SharedContextI getContext();
   JsonMap getJsonMap();
+  
+  String getHttpMethod();
+  String getRequestPath();
+  Map<String, String> getHttpParams();
+  List<String> getHttpHeaders();
+  String getHttpRequestBody();
 }

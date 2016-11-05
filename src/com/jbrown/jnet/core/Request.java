@@ -1,8 +1,13 @@
 package com.jbrown.jnet.core;
 
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.jbrown.jnet.utils.JsonMap;
 import com.jbrown.jnet.utils.KeysI;
+
 import static com.jbrown.jnet.utils.StringUtils.*;
 import static java.lang.String.format;
 
@@ -13,13 +18,16 @@ public class Request implements RequestI {
   private String[] _parameters;
   private SharedContextI _context;
   private final JsonMap _jsonMap;
-
-  public Request(Socket socket, String rowInput) {
+  private HttpRequestData _httpRequestData;
+  
+  public Request(Socket socket, String rowInput, 
+      HttpRequestData httpRequestData) {
     _socket = socket;
     _rowInput = rowInput;
     _command = populateCommand();
     _parameters = populateParameters();
     _jsonMap = new JsonMap();
+    _httpRequestData = httpRequestData;
   }
 
   @Override
@@ -35,6 +43,31 @@ public class Request implements RequestI {
   @Override
   public Command getCommand() {
     return _command;
+  }
+
+  @Override
+  public String getHttpMethod() {
+    return _httpRequestData.getMethod();
+  }
+
+  @Override
+  public String getRequestPath() {
+    return _httpRequestData.getPath();
+  }
+
+  @Override
+  public Map<String, String> getHttpParams() {
+    return _httpRequestData.getQueryParams();
+  }
+
+  @Override
+  public List<String> getHttpHeaders() {
+    return _httpRequestData.getHeaders();
+  }
+
+  @Override
+  public String getHttpRequestBody() {
+    return _httpRequestData.getBody();
   }
 
   @Override
@@ -75,7 +108,7 @@ public class Request implements RequestI {
 
     return parameters;
   }
-
+  
   /**
    * Remove null and empty chars from the row input from the user
    */

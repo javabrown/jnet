@@ -30,6 +30,8 @@ public class ActionPerformer {
     _actionPerformerMap.put(Command.WHO,   WhoAction.class);
     _actionPerformerMap.put(Command.ABOUT, AboutAction.class);
     _actionPerformerMap.put(Command.CLIP,  ClipAction.class);
+    
+    _actionPerformerMap.put(Command.NOTEPAD,  PingAction.class);
   }
 
   public Class getActionClass(RequestI request) {

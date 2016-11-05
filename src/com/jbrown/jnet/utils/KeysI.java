@@ -19,4 +19,7 @@ public interface KeysI {
 	String EMPTY_K = "";
 	String COMMA_K = ",";
 	String COLON_K = ":";
+	String QUESTION_MARK_K = "?";
+	String AMPERSAND_K = "&";
+	String EQUAL_K = "=";
 }

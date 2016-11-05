@@ -60,12 +60,12 @@ public class WorkerThread implements WorkerThreadI {
        //do {
          String command = _socketIO.read().getCommand();
          isQuitCommand = command.equalsIgnoreCase(KeysI.QUIT);
-
+         
          if(!isQuitCommand){
-           ResponseI result =
-               _responder.respond(new Request(_csocket, command));
+           ResponseI result = _responder.respond(new Request(_csocket, command, 
+               _socketIO.getHttpRequestData()));
 
-           _socketIO.writeOutput(String.format("\r%s\r", result.getResponse()));
+           _socketIO.writeOutput(String.format("%s", result.getResponse()).toString());
          }
 
          System.out.println("Done");
