@@ -8,7 +8,6 @@ import com.jbrown.jnet.core.RequestI;
 import com.jbrown.jnet.response.DefaultResponse;
 import com.jbrown.jnet.response.ResponseI;
 import com.jbrown.jnet.utils.KeysI;
-import com.jbrown.jnet.utils.StringUtils;
 
 public class MouseMoveAction implements ActionPerformerI {
 
@@ -17,8 +16,8 @@ public class MouseMoveAction implements ActionPerformerI {
     int x = getPosition(request, "x");
     int y = getPosition(request, "y");
     
-    int x1 = (int) MouseInfo.getPointerInfo().getLocation().getX() + 1;
-    int y1 = (int) MouseInfo.getPointerInfo().getLocation().getY() + 1;
+    int x1 = (int) MouseInfo.getPointerInfo().getLocation().getX() + x;
+    int y1 = (int) MouseInfo.getPointerInfo().getLocation().getY() + y;
     
     request.getContext().getSharedResources().getRobot().mouseMove(x1, y1);
    

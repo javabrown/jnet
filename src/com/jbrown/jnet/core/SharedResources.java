@@ -14,7 +14,6 @@ public class SharedResources {
       try {
         _robot = new Robot(MouseInfo.getPointerInfo().getDevice());
       } catch (HeadlessException | AWTException e) {
-        // TODO Auto-generated catch block
         e.printStackTrace();
       }
     }

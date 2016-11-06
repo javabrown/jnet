@@ -9,6 +9,7 @@ public class SharedContext implements SharedContextI {
   
   public SharedContext() {
     _jnetSharedCache = new LinkedHashMap<String, String>();
+    _sharedResources = new SharedResources();
   }
 
   @Override
