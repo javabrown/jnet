@@ -22,4 +22,6 @@ public interface KeysI {
 	String QUESTION_MARK_K = "?";
 	String AMPERSAND_K = "&";
 	String EQUAL_K = "=";
+	
+	int ERROR_CODE = -919191;
 }

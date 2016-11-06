@@ -16,7 +16,8 @@ public enum Command {
    ABOUT("about", "\n\rJNET 1.0\n\rDesigned & Developed by Raja Khan (getrk@yahoo.com)", false),
    
    NOTEPAD("/notepad/", "Launch Notepad in Windows, Mac"),
-    
+   MOUSEMOVE("/mousemove/", "MoveMouse to x and y position. Sample: http://jnethost:port/mouse?x=10&y=10"),
+   
    ;
 
 

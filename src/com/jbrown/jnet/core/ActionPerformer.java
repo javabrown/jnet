@@ -8,6 +8,7 @@ import com.jbrown.jnet.commands.action.ClipAction;
 import com.jbrown.jnet.commands.action.GetAction;
 import com.jbrown.jnet.commands.action.HelpAction;
 import com.jbrown.jnet.commands.action.MathAction;
+import com.jbrown.jnet.commands.action.MouseMoveAction;
 import com.jbrown.jnet.commands.action.NoAction;
 import com.jbrown.jnet.commands.action.PingAction;
 import com.jbrown.jnet.commands.action.SetAction;
@@ -32,6 +33,8 @@ public class ActionPerformer {
     _actionPerformerMap.put(Command.CLIP,  ClipAction.class);
     
     _actionPerformerMap.put(Command.NOTEPAD,  PingAction.class);
+    _actionPerformerMap.put(Command.MOUSEMOVE,  MouseMoveAction.class);
+    
   }
 
   public Class getActionClass(RequestI request) {
