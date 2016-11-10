@@ -34,6 +34,7 @@ public class ActionPerformer {
     _actionPerformerMap.put(Command.CLIP,  ClipAction.class);
     
     _actionPerformerMap.put(Command.NOTEPAD,  PingAction.class);
+    _actionPerformerMap.put(Command.MOUSEMOVE,  MouseMoveAction.class);
     _actionPerformerMap.put(Command.MOUSECLICK,  MouseClickAction.class);
   }
 
