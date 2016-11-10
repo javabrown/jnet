@@ -112,8 +112,8 @@ public class AbstractAction implements ActionI {
 //  abstract boolean validate();
 
   interface ActionPerformerI {
-      ResponseI perform(RequestI request, ErrorI errors);
-      boolean validate(RequestI request, ErrorI errors);
+      ResponseI perform(final RequestI request, ErrorI errors);
+      boolean validate(final RequestI request, ErrorI errors);
   }
 }
 
