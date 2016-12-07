@@ -28,12 +28,16 @@ void loop() {
     Serial.println("Out of range");
   }
   else {
+    int inchDistance = distance / 2.54;
+
     Serial.print("Distance = ");
-    Serial.print(distance/2.54);
+    Serial.print(inchDistance);
     Serial.println(" inch");
 
-    if(distance/2.54 < 50){
-      beep();
+    int duration = 2000 - (inchDistance * 50);
+
+    if(inchDistance < 50 && duration > 0){
+      beep(duration);
     }
 
     delay(500);
@@ -43,10 +47,11 @@ void loop() {
 }
 
 
-void beep(){
-  analogWrite(soundPin, 20);      // Almost any value can be used except 0 and 255
-                           // experiment to get the best tone
-  delay(1000);          // wait for a delayms ms
+void beep(int duration){
+  Serial.println(duration);
+  analogWrite(soundPin, duration/10);      // Almost any value can be used except 0 and 255
+  delay(duration);
+
   analogWrite(soundPin, 0);       // 0 turns it off
   delay(100);          // wait for a delayms ms
 }
@@ -59,7 +64,7 @@ void sendToJnet(){
 
   while (client.available()) {
     char c = client.read();
-    Serial.print(c);
+    //Serial.print(c);
   }
 
 }
